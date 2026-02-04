@@ -6,12 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "scss:types": "typed-scss-modules \"src/**/*.module.scss\" --ignorePaths \"**/node_modules/**\" --exportType default --nameFormat none"
   },
   "dependencies": {
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "sass": "^1.97.3"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -20,6 +22,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "typed-scss-modules": "^8.1.1",
     "typescript": "^5"
   }
 }

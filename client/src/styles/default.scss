@@ -1,0 +1,57 @@
+:root {
+  //Neutral
+  --neutral-0: #fff;
+  --neutral-200: #cbcdd0;
+  --neutral-300: #9393b7;
+  --neutral-600: #57577b;
+  --neutral-900: #21214d;
+
+  //Blue
+  --blue-100: #e0e6fa;
+  --blue-200: #c7d3f7;
+  --blue-600: #4865db;
+  --blue-700: #2a4cd5;
+
+  //Red
+  --red: #e60013;
+
+  //Other colors
+  --red-300: #ff9b99;
+  --indigo-200: #b8b1ff;
+  --blue-300: #89caff;
+  --green-300: #89e780;
+  --amber-300: #ffc97c;
+}
+
+* {
+  font-family: var(--font-reddit-sans), sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: none;
+  list-style-type: none;
+  transition: 0.3s;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 125rem;
+  justify-self: center;
+  background: linear-gradient(180deg, #f5f5ff 72.99%, #e0e0ff 100%);
+}
+
+button {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+@media screen and (min-width: 48rem) {
+}
+
+@media screen and (min-width: 90rem) {
+}
