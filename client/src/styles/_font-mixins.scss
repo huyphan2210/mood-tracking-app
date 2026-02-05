@@ -1,1 +1,94 @@
-//TODO Add font preset from the design here
+@mixin text-preset-1 {
+  font-size: 2.875rem;
+  letter-spacing: -0.125rem;
+  line-height: 120%;
+  font-weight: 700;
+
+  @media screen and (min-width: 48rem) {
+    font-size: 3.25rem;
+    line-height: 140%;
+  }
+}
+
+@mixin text-preset-2 {
+  font-size: 2rem;
+  letter-spacing: -0.3px;
+  line-height: 120%;
+  font-weight: 700;
+
+  @media screen and (min-width: 48rem) {
+    font-size: 2.5rem;
+  }
+}
+
+@mixin text-preset-3 {
+  font-size: 1.75rem;
+  letter-spacing: -0.3px;
+  line-height: 130%;
+  font-weight: 700;
+
+  @media screen and (min-width: 48rem) {
+    font-size: 2rem;
+    line-height: 140%;
+  }
+}
+
+@mixin text-preset-4 {
+  font-size: 1.5rem;
+  line-height: 140%;
+
+  @media screen and (min-width: 48rem) {
+    font-weight: 600;
+  }
+}
+
+@mixin text-preset-5 {
+  font-size: 1.25rem;
+  line-height: 140%;
+  font-weight: 600;
+
+  @media screen and (min-width: 48rem) {
+    line-height: 140%;
+  }
+}
+
+@mixin text-preset-6-base {
+  font-size: 1.125rem;
+}
+
+@mixin text-preset-6-medium {
+  @include text-preset-6-base;
+  line-height: 120%;
+  font-weight: 500;
+}
+
+@mixin text-preset-6-italic {
+  @include text-preset-6-base;
+  line-height: 130%;
+  font-weight: 500;
+  font-style: italic;
+}
+
+@mixin text-preset-6-regular {
+  @include text-preset-6-base;
+  line-height: 140%;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+}
+
+@mixin text-preset-7 {
+  font-size: 15px;
+  line-height: 140%;
+  letter-spacing: -0.3px;
+}
+
+@mixin text-preset-8 {
+  font-size: 13px;
+  line-height: 100%;
+  font-weight: 600;
+}
+
+@mixin text-preset-9 {
+  font-size: 0.75rem;
+  line-height: 110%;
+}
