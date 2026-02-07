@@ -2,6 +2,12 @@
 @use "../../../styles/layout-mixins" as layout-mixins;
 
 .main {
+  padding-inline: 1rem;
+  &--authentication {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 @media screen and (min-width: 48rem) {
