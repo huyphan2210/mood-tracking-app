@@ -1,0 +1,15 @@
+@use "../../../styles/font-mixins" as font-mixins;
+@use "../../../styles/layout-mixins" as layout-mixins;
+
+.main {
+}
+
+@media screen and (min-width: 48rem) {
+  .main {
+  }
+}
+
+@media screen and (min-width: 90rem) {
+  .main {
+  }
+}
