@@ -22,12 +22,16 @@ const AuthenticationForm: FC<IAuthenticationForm> = ({
         action={submitHandler}
         className={styles["authentication-container_form"]}
       >
-        <h1 className={styles["authentication-container_form_heading"]}>
-          {heading}
-        </h1>
-        <p className={styles["authentication-container_form_description"]}>
-          {description}
-        </p>
+        <div className={styles["authentication-container_form_text"]}>
+          <h1 className={styles["authentication-container_form_text_heading"]}>
+            {heading}
+          </h1>
+          <p
+            className={styles["authentication-container_form_text_description"]}
+          >
+            {description}
+          </p>
+        </div>
         {children}
       </form>
     </>

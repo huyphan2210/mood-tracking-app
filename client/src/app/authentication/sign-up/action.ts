@@ -1,3 +1,3 @@
-"use server";
-
-export const signUp = async (formData: FormData) => {};
+export const signUp = async (formData: FormData) => {
+  "use server";
+};

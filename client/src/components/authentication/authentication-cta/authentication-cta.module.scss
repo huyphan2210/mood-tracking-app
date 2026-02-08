@@ -1,0 +1,9 @@
+@use "../../../styles/font-mixins" as font-mixins;
+
+.authentication-cta {
+  text-align: center;
+
+  &_btn {
+    margin-bottom: 1.25rem;
+  }
+}
