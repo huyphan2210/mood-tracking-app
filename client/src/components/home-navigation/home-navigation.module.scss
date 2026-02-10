@@ -1,0 +1,14 @@
+.home-navigation {
+  align-items: center;
+  color: var(--neutral-900);
+  display: flex;
+  font-size: 21px;
+  font-weight: 700;
+  gap: 1rem;
+  letter-spacing: -0.8px;
+  text-decoration: none;
+
+  &_logo {
+    display: inline-block;
+  }
+}

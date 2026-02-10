@@ -1,6 +1,10 @@
 @use "../../styles/font-mixins" as font-mixins;
 
 .authentication-container {
+  &_home-nav {
+    margin-bottom: 2rem;
+  }
+
   &_form {
     animation: appear 0.3s ease-in-out;
     background-color: var(--neutral-0);
@@ -30,6 +34,10 @@
 
 @media screen and (min-width: 48rem) {
   .authentication-container {
+    &_home-nav {
+      margin-bottom: 3rem;
+    }
+
     &_form {
       padding-inline: 2rem;
     }

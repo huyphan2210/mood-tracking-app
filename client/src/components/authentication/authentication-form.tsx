@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import styles from "./authentication-form.module.scss";
-import HomeLogo from "../home-logo/home-logo";
+import HomeNavigation from "../home-navigation/home-navigation";
 
 interface IAuthenticationForm {
   heading: string;
@@ -17,7 +17,10 @@ const AuthenticationForm: FC<IAuthenticationForm> = ({
 }) => {
   return (
     <>
-      <HomeLogo />
+      <HomeNavigation
+        customClass={styles["authentication-container_home-nav"]}
+        isDisabled
+      />
       <form
         action={submitHandler}
         className={styles["authentication-container_form"]}
