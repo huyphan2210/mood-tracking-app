@@ -5,10 +5,10 @@ using server.Models.DTOs.Authentication;
 namespace server.Controllers
 {
     [ApiController]
-    [Route("/api/auth")]
+    [Route("api/auth")]
     public class AuthenticationController(AuthenticationService authenticationService) : ControllerBase
     {   
-        private AuthenticationService _authenticationService = authenticationService;
+        private readonly AuthenticationService _authenticationService = authenticationService;
 
         [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp([FromBody] AuthenticationSignUpPOST authenticationSignUp)
@@ -21,6 +21,5 @@ namespace server.Controllers
         {
             return Ok();
         }
-
     }
 }
