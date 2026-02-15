@@ -1,4 +1,4 @@
-namespace server.Models.DTOs.Authentication
+namespace server.DTOs.Authentication
 {
     public class AuthenticationSignUpPOST : AuthenticationBasePOST
     {
