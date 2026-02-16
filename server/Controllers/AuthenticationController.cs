@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using server.Models.DTOs.Authentication;
+using server.DTOs.Authentication;
 using server.Services.AuthenticationServices;
 
 namespace server.Controllers
