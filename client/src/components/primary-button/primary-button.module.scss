@@ -1,0 +1,17 @@
+@use "../../styles/font-mixins" as font-mixins;
+
+.primary-btn {
+  @include font-mixins.text-preset-5;
+  background-color: var(--blue-600);
+  border-radius: 0.625rem;
+  color: var(--neutral-0);
+  display: block;
+  width: 100%;
+  padding-block: 0.75rem;
+
+  &:hover {
+    box-shadow:
+      0 0 0 3px var(--neutral-0),
+      0 0 0 5px var(--blue-600);
+  }
+}

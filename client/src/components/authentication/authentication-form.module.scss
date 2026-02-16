@@ -1,0 +1,56 @@
+@use "../../styles/font-mixins" as font-mixins;
+
+.authentication-container {
+  &_home-nav {
+    margin-bottom: 2rem;
+  }
+
+  &_form {
+    animation: appear 0.3s ease-in-out;
+    background-color: var(--neutral-0);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 33.125rem;
+    padding: 2.5rem 1rem;
+    border-radius: 1rem;
+    width: 100%;
+
+    &_text {
+      display: block;
+      &_heading {
+        @include font-mixins.text-preset-3;
+        color: var(--neutral-900);
+      }
+
+      &_description {
+        @include font-mixins.text-preset-6-regular;
+        color: var(--neutral-600);
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 48rem) {
+  .authentication-container {
+    &_home-nav {
+      margin-bottom: 3rem;
+    }
+
+    &_form {
+      padding-inline: 2rem;
+    }
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

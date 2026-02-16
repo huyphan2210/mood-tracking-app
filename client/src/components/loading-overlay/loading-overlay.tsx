@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useRef, useState } from "react";
-import styles from "./LoadingOverlay.module.scss";
+import styles from "./loading-overlay.module.scss";
 
 interface ILoadingOverlay {
   isLoading: boolean;

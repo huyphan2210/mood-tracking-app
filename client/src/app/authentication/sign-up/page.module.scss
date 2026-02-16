@@ -1,0 +1,13 @@
+@use "../../../styles/font-mixins" as font-mixins;
+
+.sign-up {
+  &_cta-note {
+    @include font-mixins.text-preset-6-regular;
+    color: var(--neutral-600);
+
+    &_url {
+      color: var(--blue-600);
+      text-decoration: none;
+    }
+  }
+}
