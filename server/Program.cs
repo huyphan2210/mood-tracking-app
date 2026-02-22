@@ -18,6 +18,17 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", corsBuilder =>
+    {
+        corsBuilder.WithOrigins(Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 
@@ -28,6 +39,8 @@ if (app.Environment.IsDevelopment())
 
 await DbInitializer.MigrateAsync(app.Services);
 await DbInitializer.InitializeAync(app.Services);
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 

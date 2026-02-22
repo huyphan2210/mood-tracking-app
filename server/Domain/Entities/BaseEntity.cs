@@ -5,5 +5,6 @@ namespace server.Domain.Entities
     public Guid Id { get; protected set; } = Guid.NewGuid();
     public DateTime CreatedAt { get; protected set; }
     public DateTime? UpdatedAt { get; protected set; }
+    public Boolean IsDeleted { get; set; }
   }
 }
