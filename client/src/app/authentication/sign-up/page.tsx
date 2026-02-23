@@ -1,4 +1,6 @@
-import { FC } from "react";
+"use client";
+
+import { FC, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.scss";
 import PATH from "@/utilities/paths";
@@ -12,14 +14,27 @@ import { signUp } from "./action";
 const SignUp: FC = () => {
   const heading = "Create an account";
   const description = "Join to track your daily mood and sleep with ease.";
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const submitHandler = async (formData: FormData) => {
+    setIsLoading(true);
+    try {
+      await signUp(formData);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AuthenticationForm
       heading={heading}
       description={description}
-      submitHandler={signUp}
+      submitHandler={submitHandler}
     >
-      <AuthenticationFields />
-      <AuthenticationCta ctaContent="Sign Up">
+      <AuthenticationFields type="signup" />
+      <AuthenticationCta isLoading={isLoading} ctaContent="Sign Up">
         <span className={styles["sign-up_cta-note"]}>
           Already got an account?{" "}
           <Link href={PATH.LOGIN} className={styles["sign-up_cta-note_url"]}>

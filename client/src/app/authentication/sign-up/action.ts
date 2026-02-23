@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AuthenticationBaseResponsePOST,
   AuthenticationSignUpRequestPOST,
@@ -5,7 +7,6 @@ import {
 } from "../../../../Api";
 
 export const signUp = async (formData: FormData) => {
-  "use server";
   const payload: AuthenticationSignUpRequestPOST = { email: "", password: "" };
 
   for (const [key, value] of formData.entries()) {
