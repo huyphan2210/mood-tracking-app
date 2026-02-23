@@ -6,6 +6,7 @@ using server.Exceptions;
 using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
 
+const string AllowSpecificOrigin = "AllowSpecificOrigin";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", corsBuilder =>
+    options.AddPolicy(AllowSpecificOrigin, corsBuilder =>
     {
         corsBuilder.WithOrigins(Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://localhost:3000")
             .AllowAnyMethod()
@@ -40,7 +41,7 @@ if (app.Environment.IsDevelopment())
 await DbInitializer.MigrateAsync(app.Services);
 await DbInitializer.InitializeAync(app.Services);
 
-app.UseCors();
+app.UseCors(AllowSpecificOrigin);
 
 app.UseHttpsRedirection();
 
@@ -49,6 +50,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseExceptionHandler();
+
 
 app.Run();
 

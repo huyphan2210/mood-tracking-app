@@ -1,7 +1,7 @@
 namespace server.Exceptions
 {
-  public class ValidationException(IEnumerable<string> errors) : Exception("Validation failed")
-{
-    public IReadOnlyList<string> Errors { get; } = errors?.ToList() ?? [];
+  public class ValidationException(string error) : Exception(error)
+  {
+
   }
 }

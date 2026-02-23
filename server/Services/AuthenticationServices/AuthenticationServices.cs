@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using server.Domain.Entities;
@@ -10,31 +9,43 @@ using server.Exceptions;
 
 namespace server.Services.AuthenticationServices
 {
-    public class AuthenticationServices(UserManager<User> userManager, IConfiguration configuration) : IAuthenticationServices
+    public class AuthenticationServices(UserManager<User> userManager, IConfiguration configuration, ILogger<AuthenticationServices> logger) : IAuthenticationServices
     {
         private readonly UserManager<User> _userManager = userManager;
         private readonly IConfiguration _configuration = configuration;
+        private readonly ILogger<AuthenticationServices> _logger = logger;
 
         public async Task<AuthenticationBaseResponsePOST> SignUpAsync(AuthenticationSignUpRequestPOST authenticationSignUp)
         {
-            User? existingUser = await _userManager.FindByEmailAsync(authenticationSignUp.Email);
-            if (existingUser != null)
-            {
-                throw new ValidationException(["The user has existed"]);
-            }
-
             User newUser = new()
             {
                 Email = authenticationSignUp.Email,
                 UserName = authenticationSignUp.Email
             };
 
+            _logger.LogInformation("Creating a new user");
             IdentityResult? result = await _userManager.CreateAsync(newUser, authenticationSignUp.Password);
+
             if (!result.Succeeded)
             {
+                IdentityError firstError = result.Errors.ElementAt(0);
+                if (firstError.Code.Contains("Password"))
+                {
+                    _logger.LogInformation($"The password is invalid with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
+                    throw new ValidationException("The password is invalid");
+                }
+
+                if (firstError.Code == IdentityErrorCode.DuplicateUserName.ToString())
+                {
+                    _logger.LogInformation("The user has existed.");
+                    throw new ValidationException("The user has existed.");
+                }
+
+                _logger.LogError(firstError.Description, firstError);
                 throw new Exception("Failed to create a new user");
             }
 
+            _logger.LogInformation("The User with id {Id} is created.", newUser.Id);
             return new AuthenticationBaseResponsePOST
             {
                 JWT = GenerateJwtToken(newUser),
@@ -60,7 +71,7 @@ namespace server.Services.AuthenticationServices
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Name, user.UserName)
             };
-            
+
             byte[] key = Convert.FromBase64String(_configuration["Jwt:Key"]);
             var securityKey = new SymmetricSecurityKey(key);
 
