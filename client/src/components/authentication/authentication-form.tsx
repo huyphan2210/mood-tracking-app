@@ -3,14 +3,11 @@
 import { FC, ReactNode, SubmitEventHandler } from "react";
 import styles from "./authentication-form.module.scss";
 import HomeNavigation from "../home-navigation/home-navigation";
-import { AuthenticationBaseResponsePOST } from "../../../Api";
 
 interface IAuthenticationForm {
   heading: string;
   description: string;
-  submitHandler: (
-    formData: FormData,
-  ) => Promise<AuthenticationBaseResponsePOST>;
+  submitHandler: (formData: FormData) => Promise<void>;
   children: ReactNode;
 }
 
@@ -20,7 +17,7 @@ const AuthenticationForm: FC<IAuthenticationForm> = ({
   submitHandler,
   children,
 }) => {
-  const onSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
+  const onSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     submitHandler(formData);

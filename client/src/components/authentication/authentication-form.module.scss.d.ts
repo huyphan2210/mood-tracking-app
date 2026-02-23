@@ -4,7 +4,6 @@ export type Styles = {
   'authentication-container_form_text': string;
   'authentication-container_form_text_description': string;
   'authentication-container_form_text_heading': string;
-  'authentication-container_home-nav': string;
 };
 
 export type ClassNames = keyof Styles;

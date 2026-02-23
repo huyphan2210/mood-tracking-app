@@ -39,13 +39,24 @@
   }
 }
 
+@media screen and (max-height: 53.125rem) {
+  .authentication-container {
+    &_form {
+      position: static;
+      width: 100%;
+      margin-top: 3rem;
+      transform: none;
+      animation: unset;
+    }
+  }
+}
+
 @keyframes appear {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%);
+    transform: translate(0, -25%);
   }
   100% {
-    top: 50%;
     opacity: 1;
     transform: translate(0, -50%);
   }
