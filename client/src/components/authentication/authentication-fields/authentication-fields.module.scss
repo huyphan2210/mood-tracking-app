@@ -25,5 +25,13 @@
         outline: solid 1px var(--neutral-300);
       }
     }
+
+    &_note {
+      @include font-mixins.text-preset-8;
+      line-height: unset;
+      display: block;
+      margin-top: 0.5rem;
+      color: var(--neutral-300);
+    }
   }
 }

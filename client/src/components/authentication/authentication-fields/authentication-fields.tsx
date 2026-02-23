@@ -1,7 +1,11 @@
 import { FC } from "react";
 import styles from "./authentication-fields.module.scss";
 
-const AuthenticationFields: FC = () => {
+interface IAuthenticationFields {
+  type: "signup" | "login";
+}
+
+const AuthenticationFields: FC<IAuthenticationFields> = ({ type }) => {
   const email = "email";
   const password = "password";
 
@@ -33,8 +37,17 @@ const AuthenticationFields: FC = () => {
           id={password}
           name={password}
           className={styles["authentication-field-set_field-wrapper_input"]}
+          minLength={6}
           type={password}
         ></input>
+        {type === "signup" && (
+          <span
+            className={styles["authentication-field-set_field-wrapper_note"]}
+          >
+            Must have at least 6 characters, 1 non-alphanumeric, 1 digit, 1
+            uppercase, and 1 lowercase.
+          </span>
+        )}
       </div>
     </fieldset>
   );
