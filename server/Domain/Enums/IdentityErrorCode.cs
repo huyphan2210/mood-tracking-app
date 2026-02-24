@@ -6,6 +6,7 @@ namespace server.Domain.Enums
     PasswordRequiresDigit = 2,
     PasswordRequiresLower = 3,
     PasswordRequiresUpper = 4,
-    DuplicateUserName = 5,
+    PasswordTooShort = 5,
+    DuplicateUserName = 6,
   }
 }

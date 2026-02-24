@@ -31,17 +31,17 @@ namespace server.Services.AuthenticationServices
                 IdentityError firstError = result.Errors.ElementAt(0);
                 if (firstError.Code.Contains("Password"))
                 {
-                    _logger.LogInformation($"The password is invalid with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
-                    throw new ValidationException("The password is invalid");
+                    _logger.LogInformation($"Failed to create user with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
+                    throw new ValidationException(firstError.Code);
                 }
 
                 if (firstError.Code == IdentityErrorCode.DuplicateUserName.ToString())
                 {
-                    _logger.LogInformation("The user has existed.");
-                    throw new ValidationException("The user has existed.");
+                    _logger.LogInformation($"Failed to create user with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
+                    throw new ValidationException(firstError.Code);
                 }
 
-                _logger.LogError(firstError.Description, firstError);
+                _logger.LogError($"Failed to create user with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
                 throw new Exception("Failed to create a new user");
             }
 
@@ -49,7 +49,7 @@ namespace server.Services.AuthenticationServices
             return new AuthenticationBaseResponsePOST
             {
                 JWT = GenerateJwtToken(newUser),
-                Status = UserStatus.Inactive
+                Status = UserStatus.NoFullName
             };
         }
 
