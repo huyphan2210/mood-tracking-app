@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using server.Domain.Entities;
 using server.Domain.Enums;
@@ -9,7 +10,7 @@ using server.DTOs.Authentication;
 using server.Exceptions;
 using server.Services.AuthenticationServices;
 
-namespace server.Tests.Authentication
+namespace server.UnitTests.Authentication
 {
   public class AuthenticationServicesTests
   {
@@ -18,12 +19,35 @@ namespace server.Tests.Authentication
     private readonly Mock<ILogger<AuthenticationServices>> _loggerMock;
     private readonly AuthenticationServices _service;
 
+    private static Mock<UserManager<User>> CreateMockUserManager()
+    {
+      var store = new Mock<IUserStore<User>>();
+      var options = new Mock<IOptions<IdentityOptions>>();
+      var passwordHasher = new Mock<IPasswordHasher<User>>();
+      var userValidators = new List<IUserValidator<User>>();
+      var passwordValidators = new List<IPasswordValidator<User>>();
+      var keyNormalizer = new Mock<ILookupNormalizer>();
+      var errors = new IdentityErrorDescriber();
+      var services = new Mock<IServiceProvider>();
+      var logger = new Mock<ILogger<UserManager<User>>>();
+
+      return new Mock<UserManager<User>>(
+          store.Object,
+          options.Object,
+          passwordHasher.Object,
+          userValidators,
+          passwordValidators,
+          keyNormalizer.Object,
+          errors,
+          services.Object,
+          logger.Object
+      );
+    }
+
     public AuthenticationServicesTests()
     {
       var store = new Mock<IUserStore<User>>();
-      _userManagerMock = new Mock<UserManager<User>>(
-          store.Object,
-          null, null, null, null, null, null, null, null);
+      _userManagerMock = CreateMockUserManager();
 
       _configurationMock = new Mock<IConfiguration>();
       _configurationMock
