@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics;
+using server.DTOs.Exception;
 
 namespace server.Exceptions
 {
@@ -19,9 +20,9 @@ namespace server.Exceptions
       httpContext.Response.StatusCode = statusCode;
 
       await httpContext.Response.WriteAsJsonAsync(
-          new
+          new ErrorResponse
           {
-            error = exception.Message
+            Error = exception.Message
           },
           cancellationToken
       );

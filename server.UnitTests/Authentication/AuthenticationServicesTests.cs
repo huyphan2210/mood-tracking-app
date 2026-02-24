@@ -159,6 +159,21 @@ namespace server.UnitTests.Authentication
     }
 
     [Fact]
+    public async Task SignUpAsync_ShouldThrowValidationError_WhenEmailIsInvalid()
+    {
+      AuthenticationSignUpRequestPOST request = new()
+      {
+        Email = "seed",
+        Password = "123456@NewPassword"
+      };
+
+      var result = await Assert.ThrowsAsync<ValidationException>(() =>
+          _service.SignUpAsync(request));
+
+      Assert.Equal("Email is invalid", result.Message);
+    }
+
+    [Fact]
     public async Task SignUpAsync_ShouldThrowExceptionError_UnknownException()
     {
       AuthenticationSignUpRequestPOST request = new()

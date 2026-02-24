@@ -1,3 +1,4 @@
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
@@ -6,6 +7,8 @@ using server.Domain.Entities;
 using server.Domain.Enums;
 using server.DTOs.Authentication;
 using server.Exceptions;
+
+using EmailAddressAttribute = System.ComponentModel.DataAnnotations.EmailAddressAttribute;
 
 namespace server.Services.AuthenticationServices
 {
@@ -17,6 +20,12 @@ namespace server.Services.AuthenticationServices
 
         public async Task<AuthenticationBaseResponsePOST> SignUpAsync(AuthenticationSignUpRequestPOST authenticationSignUp)
         {
+            if (!new EmailAddressAttribute().IsValid(authenticationSignUp.Email))
+            {
+                _logger.LogInformation("Email is invalid");
+                throw new ValidationException("Email is invalid");
+            }
+
             User newUser = new()
             {
                 Email = authenticationSignUp.Email,

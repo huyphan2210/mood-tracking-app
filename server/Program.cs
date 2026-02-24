@@ -6,11 +6,14 @@ using server.Exceptions;
 using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
 
-const string AllowSpecificOrigin = "AllowSpecificOrigin";
+
+const string TEST_ENV = "Testing";
+const string ALLOW_SPECIFIC_ORIGIN = "AllowSpecificOrigin";
 
 var builder = WebApplication.CreateBuilder(args);
 
 AddDatabaseConnection(builder);
+
 AddCustomRepositories(builder);
 AddCustomServices(builder);
 AddGlobalExceptionHanlder(builder);
@@ -21,7 +24,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(AllowSpecificOrigin, corsBuilder =>
+    options.AddPolicy(ALLOW_SPECIFIC_ORIGIN, corsBuilder =>
     {
         corsBuilder.WithOrigins(Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://localhost:3000")
             .AllowAnyMethod()
@@ -38,10 +41,13 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-await DbInitializer.MigrateAsync(app.Services);
-await DbInitializer.InitializeAync(app.Services);
+if (!app.Environment.IsEnvironment(TEST_ENV))
+{
+    await DbInitializer.MigrateAsync(app.Services);
+    await DbInitializer.InitializeAync(app.Services);
+}
 
-app.UseCors(AllowSpecificOrigin);
+app.UseCors(ALLOW_SPECIFIC_ORIGIN);
 
 app.UseHttpsRedirection();
 
@@ -74,7 +80,7 @@ static void AddDatabaseConnection(IHostApplicationBuilder builder)
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-    if (!builder.Environment.IsDevelopment())
+    if (!builder.Environment.IsDevelopment() && !builder.Environment.IsEnvironment(TEST_ENV))
     {
         var databaseEnvUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
         if (string.IsNullOrEmpty(databaseEnvUrl))
@@ -87,11 +93,15 @@ static void AddDatabaseConnection(IHostApplicationBuilder builder)
         connectionString =
             $"Host={databaseUrl.Host};Port={databaseUrl.Port};Database={databaseUrl.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true;";
     }
+
+    if (!builder.Environment.IsEnvironment(TEST_ENV))
+    {
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseNpgsql(connectionString));
+    }
+
     builder.Services
         .AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
-
-    builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(connectionString));
 }
