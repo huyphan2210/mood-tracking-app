@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "scss:types": "typed-scss-modules \"src/**/*.module.scss\" --ignorePaths \"**/node_modules/**\" --exportType default --nameFormat none"
+    "scss:types": "typed-scss-modules \"src/**/*.module.scss\" --ignorePaths \"**/node_modules/**\" --exportType default --nameFormat none",
+    "swagger:gen": "swagger-typescript-api generate --path ./swagger.json",
+    "test": "jest"
   },
   "dependencies": {
     "next": "16.1.6",
@@ -16,13 +18,22 @@
     "sass": "^1.97.3"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "swagger-typescript-api": "^13.2.18",
     "typed-scss-modules": "^8.1.1",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }

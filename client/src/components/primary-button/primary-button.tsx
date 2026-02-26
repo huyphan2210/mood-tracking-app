@@ -10,11 +10,11 @@ interface IPrimaryButtonBase {
   isLoading?: boolean;
 }
 
-interface IPrimaryButtonForForm extends IPrimaryButtonBase {
+export interface IPrimaryButtonForForm extends IPrimaryButtonBase {
   type: "submit";
 }
 
-interface IPrimaryButton extends IPrimaryButtonBase {
+export interface IPrimaryButton extends IPrimaryButtonBase {
   type: "button";
   onClickHandler: () => void;
 }
