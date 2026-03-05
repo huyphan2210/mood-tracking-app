@@ -1,4 +1,6 @@
 namespace server.Exceptions
 {
-  public class NotFoundException : Exception { }
+  public sealed class NotFoundException(string errorCode, string message) : AppException(errorCode, message, StatusCodes.Status404NotFound)
+  {
+  }
 }

@@ -132,7 +132,7 @@ namespace server.UnitTests.Authentication
       var result = await Assert.ThrowsAsync<ValidationException>(() =>
           _service.SignUpAsync(request));
 
-      Assert.Equal(identityError.Code, result.Message);
+      Assert.Equal(identityError.Code, result.ErrorCode);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ namespace server.UnitTests.Authentication
       var result = await Assert.ThrowsAsync<ValidationException>(() =>
           _service.SignUpAsync(request));
 
-      Assert.Equal(identityError.Code, result.Message);
+      Assert.Equal(identityError.Code, result.ErrorCode);
     }
 
     [Fact]

@@ -8,5 +8,6 @@ namespace server.Domain.Enums
     PasswordRequiresUpper = 4,
     PasswordTooShort = 5,
     DuplicateUserName = 6,
+    EmailIsInvalid = 7,
   }
 }

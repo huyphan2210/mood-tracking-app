@@ -2,6 +2,7 @@ namespace server.DTOs.Exception
 {
   public class ErrorResponse
   {
-    public required string Error { get; set; }
+    public string? ErrorCode { get; set; }
+    public required string Message { get; set; }
   }
 }

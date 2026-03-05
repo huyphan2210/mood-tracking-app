@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
@@ -22,6 +24,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters
+        .Add(new JsonStringEnumConverter());
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(ALLOW_SPECIFIC_ORIGIN, corsBuilder =>
@@ -32,6 +40,8 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 var app = builder.Build();
 

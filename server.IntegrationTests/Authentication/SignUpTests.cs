@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using server.Domain.Enums;
 using server.DTOs.Authentication;
 using server.DTOs.Exception;
+using server.DTOs.Exception.Authentication;
 
 namespace server.IntegrationTests.Authentication
 {
@@ -41,7 +42,7 @@ namespace server.IntegrationTests.Authentication
 
       Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
       Assert.IsType<ErrorResponse>(result);
-      Assert.Equal(IdentityErrorCode.DuplicateUserName.ToString(), result.Error);
+      Assert.Equal(IdentityErrorCode.DuplicateUserName.ToString(), result.ErrorCode);
     }
 
     [Fact]
@@ -58,7 +59,7 @@ namespace server.IntegrationTests.Authentication
 
       Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
       Assert.IsType<ErrorResponse>(result);
-      Assert.Equal("Email is invalid", result.Error);
+      Assert.Equal("Email is invalid", result.Message);
     }
 
     [Theory]
@@ -81,7 +82,7 @@ namespace server.IntegrationTests.Authentication
       Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
       Assert.IsType<ErrorResponse>(result);
 
-      Assert.Contains(result.Error, new List<string>
+      Assert.Contains(result.ErrorCode, new List<string>
       {
         IdentityErrorCode.PasswordRequiresDigit.ToString(),
         IdentityErrorCode.PasswordRequiresLower.ToString(),

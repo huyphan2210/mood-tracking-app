@@ -23,7 +23,7 @@ namespace server.Services.AuthenticationServices
             if (!new EmailAddressAttribute().IsValid(authenticationSignUp.Email))
             {
                 _logger.LogInformation("Email is invalid");
-                throw new ValidationException("Email is invalid");
+                throw new ValidationException(IdentityErrorCode.EmailIsInvalid.ToString(), "Email is invalid");
             }
 
             User newUser = new()
@@ -41,13 +41,13 @@ namespace server.Services.AuthenticationServices
                 if (firstError.Code.Contains("Password"))
                 {
                     _logger.LogInformation($"Failed to create user with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
-                    throw new ValidationException(firstError.Code);
+                    throw new ValidationException(firstError.Code, firstError.Description);
                 }
 
                 if (firstError.Code == IdentityErrorCode.DuplicateUserName.ToString())
                 {
                     _logger.LogInformation($"Failed to create user with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
-                    throw new ValidationException(firstError.Code);
+                    throw new ValidationException(firstError.Code, firstError.Description);
                 }
 
                 _logger.LogError($"Failed to create user with errors: {string.Join(", ", result.Errors.Select(static error => error.Description))}");
@@ -68,7 +68,7 @@ namespace server.Services.AuthenticationServices
             return new AuthenticationBaseResponsePOST
             {
                 JWT = GenerateJwtToken(user),
-                Status = user.UserName is not null ? UserStatus.NoFullName : UserStatus.Active
+                Status = user.FullName is not null ? UserStatus.NoFullName : UserStatus.Active
             }; ;
         }
 
@@ -78,7 +78,7 @@ namespace server.Services.AuthenticationServices
             {
                 new(ClaimTypes.NameIdentifier, user.Id),
                 new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.Name, user.UserName)
+                new("status", UserStatus.NoFullName.ToString()),
             };
 
             byte[] key = Convert.FromBase64String(_configuration["Jwt:Key"]);
@@ -90,7 +90,7 @@ namespace server.Services.AuthenticationServices
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(24),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
