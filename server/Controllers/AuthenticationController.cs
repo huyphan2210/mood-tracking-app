@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using server.DTOs.Authentication;
+using server.DTOs.Exception;
+using server.DTOs.Exception.Authentication;
 using server.Services.AuthenticationServices;
 
 namespace server.Controllers
@@ -7,21 +9,27 @@ namespace server.Controllers
     [ApiController]
     [Route("api/auth")]
     public class AuthenticationController(IAuthenticationServices authenticationServices) : ControllerBase
-    {   
+    {
         private readonly IAuthenticationServices _authenticationServices = authenticationServices;
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUp([FromBody] AuthenticationSignUpPOST authenticationSignUp)
+        [ProducesResponseType(typeof(AuthenticationBaseResponsePOST), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SignUpErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AuthenticationBaseResponsePOST>> SignUp([FromBody] AuthenticationSignUpRequestPOST authenticationSignUp)
         {
-            await _authenticationServices.SignUpAsync(authenticationSignUp);
-            return Ok();
+            AuthenticationBaseResponsePOST result = await _authenticationServices.SignUpAsync(authenticationSignUp);
+            return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AuthenticationLoginPOST authenticationLogin)
+        [ProducesResponseType(typeof(AuthenticationBaseResponsePOST), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AuthenticationBaseResponsePOST>> Login([FromBody] AuthenticationLoginRequestPOST authenticationLogin)
         {
-            await _authenticationServices.LoginAsync(authenticationLogin);
-            return Ok();
+            AuthenticationBaseResponsePOST result = await _authenticationServices.LoginAsync(authenticationLogin);
+            return Ok(result);
         }
     }
 }

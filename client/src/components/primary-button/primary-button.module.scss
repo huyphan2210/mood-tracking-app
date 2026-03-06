@@ -9,9 +9,17 @@
   width: 100%;
   padding-block: 0.75rem;
 
-  &:hover {
+  &:hover,
+  &:focus {
+    background-color: var(--blue-700);
     box-shadow:
       0 0 0 3px var(--neutral-0),
       0 0 0 5px var(--blue-600);
+    outline: none;
+  }
+
+  &:disabled {
+    background-color: var(--blue-200);
+    cursor: not-allowed;
   }
 }

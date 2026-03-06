@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics;
+using server.DTOs.Exception;
 
 namespace server.Exceptions
 {
@@ -9,20 +10,27 @@ namespace server.Exceptions
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
       _logger.LogError(exception, "Unhandled exception occurred.");
-      var statusCode = exception switch
+
+      httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+      ErrorResponse errorResponse = new()
       {
-        ValidationException => StatusCodes.Status400BadRequest,
-        NotFoundException => StatusCodes.Status404NotFound,
-        _ => StatusCodes.Status500InternalServerError
+        ErrorCode = "InternalServerError",
+        Message = "An unexpected error occurred."
       };
 
-      httpContext.Response.StatusCode = statusCode;
+
+      if (exception is AppException appException)
+      {
+        httpContext.Response.StatusCode = appException.StatusCode;
+        errorResponse = new()
+        {
+          ErrorCode = appException.ErrorCode,
+          Message = appException.Message
+        };
+      }
 
       await httpContext.Response.WriteAsJsonAsync(
-          new
-          {
-            error = exception.Message
-          },
+          errorResponse,
           cancellationToken
       );
 

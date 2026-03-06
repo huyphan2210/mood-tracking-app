@@ -24,6 +24,28 @@
       &:focus-visible {
         outline: solid 1px var(--neutral-300);
       }
+
+      &--invalid {
+        border-color: var(--red);
+        outline-color: var(--red) !important;
+      }
+    }
+
+    &_error-msg {
+      @include font-mixins.text-preset-9;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: var(--red);
+      margin-top: 0.375rem;
+    }
+
+    &_note {
+      @include font-mixins.text-preset-8;
+      line-height: unset;
+      display: block;
+      margin-top: 0.5rem;
+      color: var(--neutral-300);
     }
   }
 }

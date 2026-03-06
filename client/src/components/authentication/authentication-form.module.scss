@@ -1,20 +1,19 @@
 @use "../../styles/font-mixins" as font-mixins;
 
 .authentication-container {
-  &_home-nav {
-    margin-bottom: 2rem;
-  }
-
   &_form {
-    animation: appear 0.3s ease-in-out;
+    animation: appear 0.5s ease-in-out;
     background-color: var(--neutral-0);
     display: flex;
     flex-direction: column;
     gap: 2rem;
     max-width: 33.125rem;
     padding: 2.5rem 1rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     border-radius: 1rem;
-    width: 100%;
+    width: calc(100% - 2rem);
 
     &_text {
       display: block;
@@ -34,12 +33,20 @@
 
 @media screen and (min-width: 48rem) {
   .authentication-container {
-    &_home-nav {
-      margin-bottom: 3rem;
-    }
-
     &_form {
       padding-inline: 2rem;
+    }
+  }
+}
+
+@media screen and (max-height: 53.125rem) {
+  .authentication-container {
+    &_form {
+      position: static;
+      width: 100%;
+      margin-top: 3rem;
+      transform: none;
+      animation: unset;
     }
   }
 }
@@ -47,10 +54,10 @@
 @keyframes appear {
   0% {
     opacity: 0;
-    transform: translateX(-50%);
+    transform: translate(0, -25%);
   }
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate(0, -50%);
   }
 }

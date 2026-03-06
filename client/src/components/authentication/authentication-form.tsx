@@ -1,6 +1,7 @@
-import { FC, ReactNode } from "react";
+"use client";
+
+import { FC, ReactNode, SubmitEventHandler } from "react";
 import styles from "./authentication-form.module.scss";
-import HomeNavigation from "../home-navigation/home-navigation";
 
 interface IAuthenticationForm {
   heading: string;
@@ -15,29 +16,31 @@ const AuthenticationForm: FC<IAuthenticationForm> = ({
   submitHandler,
   children,
 }) => {
+  const onSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    submitHandler(formData);
+  };
+
   return (
-    <>
-      <HomeNavigation
-        customClass={styles["authentication-container_home-nav"]}
-        isDisabled
-      />
-      <form
-        action={submitHandler}
-        className={styles["authentication-container_form"]}
-      >
-        <div className={styles["authentication-container_form_text"]}>
-          <h1 className={styles["authentication-container_form_text_heading"]}>
-            {heading}
-          </h1>
-          <p
-            className={styles["authentication-container_form_text_description"]}
-          >
-            {description}
-          </p>
-        </div>
-        {children}
-      </form>
-    </>
+    <form
+      aria-labelledby="auth-heading"
+      onSubmit={onSubmit}
+      className={styles["authentication-container_form"]}
+    >
+      <div className={styles["authentication-container_form_text"]}>
+        <h1
+          id="auth-heading"
+          className={styles["authentication-container_form_text_heading"]}
+        >
+          {heading}
+        </h1>
+        <p className={styles["authentication-container_form_text_description"]}>
+          {description}
+        </p>
+      </div>
+      {children}
+    </form>
   );
 };
 

@@ -6,5 +6,8 @@ namespace server.Data
 {
   public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
   {
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    => optionsBuilder
+        .UseSnakeCaseNamingConvention();
   }
 }

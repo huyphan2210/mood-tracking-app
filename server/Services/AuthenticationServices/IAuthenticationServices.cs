@@ -4,7 +4,7 @@ namespace server.Services.AuthenticationServices
 {
     public interface IAuthenticationServices
     {
-        public Task LoginAsync(AuthenticationLoginPOST authenticationLogin);
-        public Task SignUpAsync(AuthenticationSignUpPOST authenticationSignUp);
+        public Task<AuthenticationBaseResponsePOST> LoginAsync(AuthenticationLoginRequestPOST authenticationLogin);
+        public Task<AuthenticationBaseResponsePOST> SignUpAsync(AuthenticationSignUpRequestPOST authenticationSignUp);
     }
 }
