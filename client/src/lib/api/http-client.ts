@@ -10,23 +10,6 @@
  * ---------------------------------------------------------------
  */
 
-export interface AuthenticationBaseResponsePOST {
-  status: UserStatus;
-  jwt: string;
-}
-
-export interface AuthenticationLoginRequestPOST {
-  email: string;
-  password: string;
-}
-
-export interface AuthenticationSignUpRequestPOST {
-  email: string;
-  password: string;
-}
-
-export type UserStatus = number;
-
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -80,7 +63,7 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = "http://localhost:5281/";
+  public baseUrl: string = "http://localhost:5281";
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
@@ -279,56 +262,5 @@ export class HttpClient<SecurityDataType = unknown> {
       if (!response.ok) throw data;
       return data;
     });
-  };
-}
-
-/**
- * @title server | v1
- * @version 1.0.0
- * @baseUrl http://localhost:5281/
- */
-export class Api<
-  SecurityDataType extends unknown,
-> extends HttpClient<SecurityDataType> {
-  api = {
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name AuthSignUpCreate
-     * @request POST:/api/auth/sign-up
-     */
-    authSignUpCreate: (
-      data: AuthenticationSignUpRequestPOST,
-      params: RequestParams = {},
-    ) =>
-      this.request<AuthenticationBaseResponsePOST, any>({
-        path: `/api/auth/sign-up`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name AuthLoginCreate
-     * @request POST:/api/auth/login
-     */
-    authLoginCreate: (
-      data: AuthenticationLoginRequestPOST,
-      params: RequestParams = {},
-    ) =>
-      this.request<AuthenticationBaseResponsePOST, any>({
-        path: `/api/auth/login`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
   };
 }

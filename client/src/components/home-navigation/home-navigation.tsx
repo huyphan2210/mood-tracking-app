@@ -4,7 +4,7 @@ import Link from "next/link";
 import styles from "./home-navigation.module.scss";
 import logoIcon from "../../icons/logo.svg";
 
-import PATH from "@/utilities/paths";
+import PATH from "@/lib/paths";
 import Image from "next/image";
 
 interface IHomeNavigation {

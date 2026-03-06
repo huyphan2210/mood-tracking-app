@@ -3,7 +3,7 @@
 import { FC, ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./main.module.scss";
-import { AUTHENTICATION_PATHS } from "@/utilities/paths";
+import { AUTHENTICATION_PATHS } from "@/lib/paths";
 
 interface ILayoutMain {
   children: ReactNode;

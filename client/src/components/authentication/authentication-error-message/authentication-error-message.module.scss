@@ -1,0 +1,9 @@
+@use "../../../styles/font-mixins" as font-mixins;
+
+.authentication-error-message {
+  @include font-mixins.text-preset-6-regular;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--red);
+}

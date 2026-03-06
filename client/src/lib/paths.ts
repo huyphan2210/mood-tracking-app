@@ -2,6 +2,7 @@ enum PATH {
   HOME = "/",
   LOGIN = "/authentication/login",
   SIGNUP = "/authentication/sign-up",
+  ONBOARDING = "/authentication/onboarding",
 }
 
 export const AUTHENTICATION_PATHS: string[] = [

@@ -2,7 +2,6 @@
 
 import { FC, ReactNode, SubmitEventHandler } from "react";
 import styles from "./authentication-form.module.scss";
-import HomeNavigation from "../home-navigation/home-navigation";
 
 interface IAuthenticationForm {
   heading: string;
@@ -24,25 +23,24 @@ const AuthenticationForm: FC<IAuthenticationForm> = ({
   };
 
   return (
-    <>
-      <HomeNavigation isDisabled />
-      <form
-        onSubmit={onSubmit}
-        className={styles["authentication-container_form"]}
-      >
-        <div className={styles["authentication-container_form_text"]}>
-          <h1 className={styles["authentication-container_form_text_heading"]}>
-            {heading}
-          </h1>
-          <p
-            className={styles["authentication-container_form_text_description"]}
-          >
-            {description}
-          </p>
-        </div>
-        {children}
-      </form>
-    </>
+    <form
+      aria-labelledby="auth-heading"
+      onSubmit={onSubmit}
+      className={styles["authentication-container_form"]}
+    >
+      <div className={styles["authentication-container_form_text"]}>
+        <h1
+          id="auth-heading"
+          className={styles["authentication-container_form_text_heading"]}
+        >
+          {heading}
+        </h1>
+        <p className={styles["authentication-container_form_text_description"]}>
+          {description}
+        </p>
+      </div>
+      {children}
+    </form>
   );
 };
 

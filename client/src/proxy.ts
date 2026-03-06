@@ -1,28 +1,45 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import PATH from "./utilities/paths";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
-const BYPASS_PATHS: string[] = [PATH.LOGIN, PATH.SIGNUP];
-const HOME_PATH = "/";
+import PATH from "./lib/paths";
+import { UserStatus } from "./lib/api/data-contracts";
+
+const BYPASS_PATHS = new Set([PATH.LOGIN, PATH.SIGNUP] as string[]);
+
+interface IJwtPayload extends JwtPayload {
+  status: string;
+}
 
 export function proxy(req: NextRequest) {
-  const authHeader = req.headers.get("authorization");
-  const { pathname } = req.nextUrl;
+  const jwt = req.cookies.get("jwt")?.value;
+  const decodedJwt = jwt ? jwtDecode<IJwtPayload>(jwt) : undefined;
 
-  if (BYPASS_PATHS.includes(pathname)) {
-    if (!authHeader) {
+  const { pathname } = req.nextUrl;
+  const isBypassPath = BYPASS_PATHS.has(pathname);
+
+  if (!decodedJwt) {
+    if (isBypassPath) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL(HOME_PATH, req.url));
+
+    return NextResponse.redirect(new URL(PATH.LOGIN, req.url));
   }
 
-  if (!authHeader) {
-    return NextResponse.redirect(new URL(PATH.LOGIN, req.url));
+  if (
+    decodedJwt.status === UserStatus.NoFullName &&
+    pathname !== PATH.ONBOARDING
+  ) {
+    return NextResponse.redirect(new URL(PATH.ONBOARDING, req.url));
+  }
+
+  if (isBypassPath) {
+    return NextResponse.redirect(new URL(PATH.HOME, req.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

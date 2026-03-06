@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "scss:types": "typed-scss-modules \"src/**/*.module.scss\" --ignorePaths \"**/node_modules/**\" --exportType default --nameFormat none",
-    "swagger:gen": "swagger-typescript-api generate --path ./swagger.json",
+    "api:gen": "swagger-typescript-api generate --path ./swagger.json --output ./src/lib/api --modular",
     "test": "jest"
   },
   "dependencies": {
+    "jwt-decode": "^4.0.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
