@@ -3,13 +3,15 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Background.Queue;
+using server.Clients.GenAIClient;
+
 // using server.Background.Workers;
-using server.Clients.LLMClient;
 using server.Data;
 using server.Domain.Entities;
 using server.Exceptions;
 using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
+using server.Services.LLMServices;
 
 const string TEST_ENV = "Testing";
 const string ALLOW_SPECIFIC_ORIGIN = "AllowSpecificOrigin";
@@ -81,6 +83,7 @@ app.Run();
 static void AddCustomServices(WebApplicationBuilder builder)
 {
     builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+    builder.Services.AddScoped<ILLMServices, LLMServices>();
 }
 
 static void AddCustomBackgroundServices(WebApplicationBuilder builder)
@@ -93,7 +96,7 @@ static void AddCustomBackgroundServices(WebApplicationBuilder builder)
 
 static void AddCustomClient(WebApplicationBuilder builder)
 {
-    builder.Services.AddSingleton<ILLMClient, LLMClient>();
+    builder.Services.AddSingleton<IGenAIClient, GenAIClient>();
 }
 
 static void AddCustomRepositories(WebApplicationBuilder builder)

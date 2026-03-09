@@ -1,6 +1,6 @@
-namespace server.Clients.LLMClient
+namespace server.Services.LLMServices
 {
-  public interface ILLMClient
+  public interface ILLMServices
   {
     public Task<T?> PromptForJsonAsync<T>(
       string prompt,

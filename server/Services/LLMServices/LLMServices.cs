@@ -1,23 +1,15 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Google.GenAI;
+using server.Clients.GenAIClient;
 
-namespace server.Clients.LLMClient
+namespace server.Services.LLMServices
 {
-  public partial class LLMClient : ILLMClient
+  public partial class LLMServices(IGenAIClient genAIClient, ILogger<LLMServices> logger) : ILLMServices
   {
     [GeneratedRegex(@"```(?:json)?\s*(\{[\s\S]*?\})\s*```")]
     private static partial Regex MarkdownJsonRegex();
-    private const string model = "gemini-2.5-flash";
-    private readonly Client _client;
-    private readonly ILogger<LLMClient> _logger;
-
-    public LLMClient(IConfiguration configuration, ILogger<LLMClient> logger)
-    {
-      var apiKey = configuration["Gemini:Apikey"];
-      _client = new(apiKey: apiKey);
-      _logger = logger;
-    }
+    private readonly IGenAIClient _genAIClient = genAIClient;
+    private readonly ILogger<LLMServices> _logger = logger;
 
     public async Task<T?> PromptForJsonAsync<T>(
       string prompt,
@@ -37,7 +29,7 @@ namespace server.Clients.LLMClient
 
         for (int attempt = 0; attempt < maxRetries; attempt++)
         {
-          var response = await SendPromptAsync(currentPrompt, cancellationToken);
+          var response = await _genAIClient.SendPromptAsync(currentPrompt, cancellationToken);
           var cleanedJson = CleanJson(response);
 
           try
@@ -57,31 +49,20 @@ namespace server.Clients.LLMClient
       catch (HttpRequestException ex)
       {
         _logger.LogError("LLM request failed", ex);
-        throw new LLMClientExpcetion("LLM request failed", ex);
+        throw new LLMServicesExpcetion("LLM request failed", ex);
       }
       catch (Exception ex) when (ex is JsonException or NotSupportedException)
       {
         _logger.LogError($"All {maxRetries} attempts failed to deserialize json", ex);
-        throw new LLMClientExpcetion($"LLMClient failed to deserialize json from prompt: {currentPrompt}");
+        throw new LLMServicesExpcetion($"LLMClient failed to deserialize json from prompt: {currentPrompt}");
       }
       catch (Exception ex)
       {
         _logger.LogError("Unknown exception has happened", ex);
-        throw new LLMClientExpcetion("Unknown exception has happened", ex);
+        throw new LLMServicesExpcetion("Unknown exception has happened", ex);
       }
 
       return default;
-    }
-
-    private async Task<string> SendPromptAsync(string prompt, CancellationToken cancellationToken)
-    {
-      var response = await _client.Models.GenerateContentAsync(
-         model,
-         prompt,
-         cancellationToken: cancellationToken
-       );
-
-      return response.Text ?? "";
     }
 
     private static string CleanJson(string response)
@@ -107,9 +88,9 @@ namespace server.Clients.LLMClient
     }
   }
 
-  public class LLMClientExpcetion : Exception
+  public class LLMServicesExpcetion : Exception
   {
-    public LLMClientExpcetion(string message) : base(message) { }
-    public LLMClientExpcetion(string message, Exception exception) : base(message, exception) { }
+    public LLMServicesExpcetion(string message) : base(message) { }
+    public LLMServicesExpcetion(string message, Exception exception) : base(message, exception) { }
   }
 }
