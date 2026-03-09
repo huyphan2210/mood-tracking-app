@@ -16,7 +16,7 @@ namespace server.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     normalized_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     concurrency_stamp = table.Column<string>(type: "text", nullable: true)
@@ -30,7 +30,7 @@ namespace server.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<string>(type: "text", nullable: false),
                     full_name = table.Column<string>(type: "text", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -61,7 +61,7 @@ namespace server.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    role_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    role_id = table.Column<string>(type: "text", nullable: false),
                     claim_type = table.Column<string>(type: "text", nullable: true),
                     claim_value = table.Column<string>(type: "text", nullable: true)
                 },
@@ -82,7 +82,7 @@ namespace server.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
                     claim_type = table.Column<string>(type: "text", nullable: true),
                     claim_value = table.Column<string>(type: "text", nullable: true)
                 },
@@ -104,7 +104,7 @@ namespace server.Migrations
                     login_provider = table.Column<string>(type: "text", nullable: false),
                     provider_key = table.Column<string>(type: "text", nullable: false),
                     provider_display_name = table.Column<string>(type: "text", nullable: true),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    user_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,8 +121,8 @@ namespace server.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    role_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    user_id = table.Column<string>(type: "text", nullable: false),
+                    role_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,7 +145,7 @@ namespace server.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
                     login_provider = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     value = table.Column<string>(type: "text", nullable: true)
@@ -155,33 +155,6 @@ namespace server.Migrations
                     table.PrimaryKey("pk_asp_net_user_tokens", x => new { x.user_id, x.login_provider, x.name });
                     table.ForeignKey(
                         name: "fk_asp_net_user_tokens_asp_net_users_user_id",
-                        column: x => x.user_id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "moods",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    feelings = table.Column<int[]>(type: "integer[]", nullable: false),
-                    mood_name = table.Column<int>(type: "integer", nullable: false),
-                    sleep_hours = table.Column<int>(type: "integer", nullable: false),
-                    mood_description = table.Column<string>(type: "text", nullable: false),
-                    llm_advice = table.Column<string>(type: "text", nullable: true),
-                    llm_analysis = table.Column<string>(type: "text", nullable: true),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_moods", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_moods_users_user_id",
                         column: x => x.user_id,
                         principalTable: "AspNetUsers",
                         principalColumn: "id",
@@ -224,11 +197,6 @@ namespace server.Migrations
                 table: "AspNetUsers",
                 column: "normalized_user_name",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_moods_user_id",
-                table: "moods",
-                column: "user_id");
         }
 
         /// <inheritdoc />
@@ -248,9 +216,6 @@ namespace server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "moods");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
