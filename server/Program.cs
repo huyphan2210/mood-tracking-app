@@ -2,12 +2,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using server.Background.Queue;
+using server.Background.Workers;
+using server.Clients.LLMClient;
 using server.Data;
 using server.Domain.Entities;
 using server.Exceptions;
 using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
-
 
 const string TEST_ENV = "Testing";
 const string ALLOW_SPECIFIC_ORIGIN = "AllowSpecificOrigin";
@@ -17,10 +19,17 @@ var builder = WebApplication.CreateBuilder(args);
 AddDatabaseConnection(builder);
 
 AddCustomRepositories(builder);
+AddCustomBackgroundServices(builder);
 AddCustomServices(builder);
+AddCustomClient(builder);
 AddGlobalExceptionHanlder(builder);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+        );
+    });
 
 builder.Services.AddOpenApi();
 
@@ -67,12 +76,24 @@ app.MapControllers();
 
 app.UseExceptionHandler();
 
-
 app.Run();
 
 static void AddCustomServices(WebApplicationBuilder builder)
 {
     builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+}
+
+static void AddCustomBackgroundServices(WebApplicationBuilder builder)
+{
+    builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+    builder.Services.AddSingleton(typeof(IBackgroundTaskQueue<>), typeof(BackgroundTaskQueue<>));
+
+    builder.Services.AddHostedService<MoodAnalysisWorker>();
+}
+
+static void AddCustomClient(WebApplicationBuilder builder)
+{
+    builder.Services.AddSingleton<ILLMClient, LLMClient>();
 }
 
 static void AddCustomRepositories(WebApplicationBuilder builder)
