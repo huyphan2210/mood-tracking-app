@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Background.Queue;
-using server.Background.Workers;
+// using server.Background.Workers;
 using server.Clients.LLMClient;
 using server.Data;
 using server.Domain.Entities;
@@ -88,7 +88,7 @@ static void AddCustomBackgroundServices(WebApplicationBuilder builder)
     builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
     builder.Services.AddSingleton(typeof(IBackgroundTaskQueue<>), typeof(BackgroundTaskQueue<>));
 
-    builder.Services.AddHostedService<MoodAnalysisWorker>();
+    // builder.Services.AddHostedService<MoodAnalysisWorker>();
 }
 
 static void AddCustomClient(WebApplicationBuilder builder)
