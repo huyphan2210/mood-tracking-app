@@ -40,7 +40,10 @@ namespace server.Services.LLMServices
           catch (Exception ex) when (ex is JsonException or NotSupportedException)
           {
             if (attempt == maxRetries - 1)
-              throw;
+            {
+              logger.LogError(ex, $"All {maxRetries} attempts failed to deserialize json");
+              throw new LLMServicesExpcetion($"LLMClient failed to deserialize json from prompt: {currentPrompt}");
+            }
 
             currentPrompt = retryPrompt(response);
           }
@@ -48,17 +51,16 @@ namespace server.Services.LLMServices
       }
       catch (HttpRequestException ex)
       {
-        _logger.LogError("LLM request failed", ex);
+        _logger.LogError(ex, "LLM request failed");
         throw new LLMServicesExpcetion("LLM request failed", ex);
       }
-      catch (Exception ex) when (ex is JsonException or NotSupportedException)
+      catch (LLMServicesExpcetion)
       {
-        _logger.LogError($"All {maxRetries} attempts failed to deserialize json", ex);
-        throw new LLMServicesExpcetion($"LLMClient failed to deserialize json from prompt: {currentPrompt}");
+        throw;
       }
       catch (Exception ex)
       {
-        _logger.LogError("Unknown exception has happened", ex);
+        _logger.LogError(ex, "Unknown exception has happened");
         throw new LLMServicesExpcetion("Unknown exception has happened", ex);
       }
 

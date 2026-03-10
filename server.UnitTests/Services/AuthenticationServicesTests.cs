@@ -10,7 +10,7 @@ using server.DTOs.Authentication;
 using server.Exceptions;
 using server.Services.AuthenticationServices;
 
-namespace server.UnitTests.Authentication
+namespace server.UnitTests.Services
 {
   public class AuthenticationServicesTests
   {

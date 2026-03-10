@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
+using Google.GenAI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Background.Queue;
@@ -96,6 +97,13 @@ static void AddCustomBackgroundServices(WebApplicationBuilder builder)
 
 static void AddCustomClient(WebApplicationBuilder builder)
 {
+    builder.Services.AddSingleton(sp =>
+    {
+        var configuration = sp.GetRequiredService<IConfiguration>();
+        var apiKey = configuration["Gemini:Apikey"];
+        return new Client(apiKey: apiKey);
+    });
+
     builder.Services.AddSingleton<IGenAIClient, GenAIClient>();
 }
 
