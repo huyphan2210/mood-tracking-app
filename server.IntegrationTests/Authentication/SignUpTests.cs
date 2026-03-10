@@ -1,9 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
-using server.Domain.Enums;
+using server.Domain.Enums.User;
 using server.DTOs.Authentication;
 using server.DTOs.Exception;
-using server.DTOs.Exception.Authentication;
 
 namespace server.IntegrationTests.Authentication
 {

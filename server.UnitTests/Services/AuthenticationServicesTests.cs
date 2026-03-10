@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using server.Domain.Entities;
-using server.Domain.Enums;
+using server.Domain.Enums.User;
 using server.DTOs.Authentication;
 using server.Exceptions;
 using server.Services.AuthenticationServices;
