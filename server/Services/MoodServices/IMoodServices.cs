@@ -4,6 +4,6 @@ namespace server.Services.MoodServices
 {
   public interface IMoodServices
   {
-    public Task AnalyzeMoodAsync(AnalyzeMoodRequestPOST analyzeMoodRequestPost, string userId);
+    public Task AnalyzeMoodAsync(AnalyzeMoodRequestPOST analyzeMoodRequestPost, Guid userId);
   }
 }

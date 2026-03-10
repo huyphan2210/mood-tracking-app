@@ -18,8 +18,8 @@ namespace server.Controllers
       [FromBody] AnalyzeMoodRequestPOST analyzeMoodRequestPOST
     )
     {
-      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-      await _moodServices.AnalyzeMoodAsync(analyzeMoodRequestPOST, userId ?? "");
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+      await _moodServices.AnalyzeMoodAsync(analyzeMoodRequestPOST, Guid.Parse(userId));
       return Ok();
     }
   }

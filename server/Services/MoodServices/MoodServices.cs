@@ -22,10 +22,11 @@ namespace server.Services.MoodServices
 
     public async Task AnalyzeMoodAsync(
       AnalyzeMoodRequestPOST analyzeMoodRequestPost,
-      string userId
+      Guid userId
     )
     {
-      var user = await _authenticationServices.FindUserByIdAsync(Guid.Parse(userId));
+      var user = await _authenticationServices.FindUserByIdAsync(userId);
+
       var newMood = new Mood
       {
         Feelings = analyzeMoodRequestPost.Feelings,
@@ -34,6 +35,7 @@ namespace server.Services.MoodServices
         SleepHours = analyzeMoodRequestPost.SleepHours,
         UserId = user.Id
       };
+
       var createdMood = await _moodRepository.CreateMoodAsync(newMood);
 
       var prompt = CreateMoodPrompt(user, analyzeMoodRequestPost);
