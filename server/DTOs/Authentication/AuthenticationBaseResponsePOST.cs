@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using server.Domain.Enums;
+using server.Domain.Enums.User;
 
 namespace server.DTOs.Authentication
 {

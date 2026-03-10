@@ -1,4 +1,4 @@
-namespace server.Domain.Enums
+namespace server.Domain.Enums.User
 {
   public enum UserStatus
   {

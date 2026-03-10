@@ -2,9 +2,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Domain.Entities;
-using server.Domain.Enums;
+using server.Domain.Enums.User;
 using server.DTOs.Authentication;
 using server.Exceptions;
 
@@ -12,7 +13,11 @@ using EmailAddressAttribute = System.ComponentModel.DataAnnotations.EmailAddress
 
 namespace server.Services.AuthenticationServices
 {
-    public class AuthenticationServices(UserManager<User> userManager, IConfiguration configuration, ILogger<AuthenticationServices> logger) : IAuthenticationServices
+    public class AuthenticationServices(
+        UserManager<User> userManager,
+        IConfiguration configuration,
+        ILogger<AuthenticationServices> logger
+    ) : IAuthenticationServices
     {
         private readonly UserManager<User> _userManager = userManager;
         private readonly IConfiguration _configuration = configuration;
@@ -76,7 +81,7 @@ namespace server.Services.AuthenticationServices
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
                 new("status", UserStatus.NoFullName.ToString()),
             };
@@ -94,6 +99,13 @@ namespace server.Services.AuthenticationServices
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == id && user.IsDeleted == false, cancellationToken)
+                ?? throw new NotFoundException(IdentityErrorCode.UserNotFound.ToString(), $"Cannot find a user with id ${id}");
+            return user;
         }
     }
 }
