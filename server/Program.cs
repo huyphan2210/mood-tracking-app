@@ -1,18 +1,23 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using System.Text.Json.Serialization;
 using Google.GenAI;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using server.Background.Queue;
 using server.Clients.GenAIClient;
 
-// using server.Background.Workers;
+using server.Background.Workers;
 using server.Data;
 using server.Domain.Entities;
 using server.Exceptions;
+using server.Repositories.MoodRepository;
 using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
 using server.Services.LLMServices;
+using server.Services.MoodServices;
 
 const string TEST_ENV = "Testing";
 const string ALLOW_SPECIFIC_ORIGIN = "AllowSpecificOrigin";
@@ -53,6 +58,21 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+        )
+    };
+});
+
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 var app = builder.Build();
@@ -85,6 +105,7 @@ static void AddCustomServices(WebApplicationBuilder builder)
 {
     builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
     builder.Services.AddScoped<ILLMServices, LLMServices>();
+    builder.Services.AddScoped<IMoodServices, MoodServices>();
 }
 
 static void AddCustomBackgroundServices(WebApplicationBuilder builder)
@@ -92,7 +113,7 @@ static void AddCustomBackgroundServices(WebApplicationBuilder builder)
     builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
     builder.Services.AddSingleton(typeof(IBackgroundTaskQueue<>), typeof(BackgroundTaskQueue<>));
 
-    // builder.Services.AddHostedService<MoodAnalysisWorker>();
+    builder.Services.AddHostedService<MoodAnalysisWorker>();
 }
 
 static void AddCustomClient(WebApplicationBuilder builder)
@@ -110,6 +131,7 @@ static void AddCustomClient(WebApplicationBuilder builder)
 static void AddCustomRepositories(WebApplicationBuilder builder)
 {
     builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<IMoodRepository, MoodRepository>();
 }
 
 static void AddGlobalExceptionHanlder(WebApplicationBuilder builder)
@@ -143,7 +165,7 @@ static void AddDatabaseConnection(IHostApplicationBuilder builder)
     }
 
     builder.Services
-        .AddIdentity<User, IdentityRole>()
+        .AddIdentity<User, IdentityRole<Guid>>()
         .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
 }

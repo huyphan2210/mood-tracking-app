@@ -26,9 +26,11 @@ namespace server.Data
       {
         var user = new User
         {
+          Id = Guid.Parse("019cd5ad-2246-765d-8d3b-27610e81c6ca"),
           UserName = "guest",
           Email = "guest@example.com",
-          EmailConfirmed = true
+          EmailConfirmed = true,
+          FullName = "Guest User"
         };
 
         await userManager.CreateAsync(user, "Guest123!");

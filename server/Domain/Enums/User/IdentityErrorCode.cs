@@ -1,5 +1,8 @@
-namespace server.Domain.Enums
+using System.Text.Json.Serialization;
+
+namespace server.Domain.Enums.User
 {
+  [JsonConverter(typeof(JsonStringEnumConverter))]
   public enum IdentityErrorCode
   {
     PasswordRequiresNonAlphanumeric = 1,
@@ -9,5 +12,6 @@ namespace server.Domain.Enums
     PasswordTooShort = 5,
     DuplicateUserName = 6,
     EmailIsInvalid = 7,
+    UserNotFound = 8
   }
 }

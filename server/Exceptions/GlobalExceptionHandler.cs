@@ -9,8 +9,6 @@ namespace server.Exceptions
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-      _logger.LogError(exception, "Unhandled exception occurred.");
-
       httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
       ErrorResponse errorResponse = new()
       {
@@ -27,6 +25,10 @@ namespace server.Exceptions
           ErrorCode = appException.ErrorCode,
           Message = appException.Message
         };
+      }
+      else
+      {
+        _logger.LogError(exception, "Unhandled exception occurred.");
       }
 
       await httpContext.Response.WriteAsJsonAsync(
