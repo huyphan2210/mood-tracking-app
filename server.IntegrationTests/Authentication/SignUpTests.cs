@@ -6,7 +6,7 @@ using server.DTOs.Exception;
 
 namespace server.IntegrationTests.Authentication
 {
-  public class SignUpTests(CustomWebApplicationFactory factory) : AuthenticationBaseTests(factory)
+  public class SignUpTests(CustomWebApplicationFactory factory) : BaseTests(factory)
   {
     private const string requestUrl = "/api/auth/sign-up";
 

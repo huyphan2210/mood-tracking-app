@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using server.Data;
 using server.Domain.Entities;
 using Testcontainers.PostgreSql;
+using Respawn;
+using Npgsql;
+using Microsoft.AspNetCore.Authentication;
 
 namespace server.IntegrationTests
 {
@@ -16,6 +19,26 @@ namespace server.IntegrationTests
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
+
+    private Respawner? _respawner;
+
+    public async Task InitializeAsync()
+    {
+      await _postgres.StartAsync();
+
+      using var scope = Services.CreateScope();
+      var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+      await context.Database.MigrateAsync();
+
+      await using var connection = new NpgsqlConnection(_postgres.GetConnectionString());
+      await connection.OpenAsync();
+
+      _respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
+      {
+        DbAdapter = DbAdapter.Postgres,
+        TablesToIgnore = ["__EFMigrationsHistory"]
+      });
+    }
 
     public override async ValueTask DisposeAsync()
     {
@@ -28,8 +51,6 @@ namespace server.IntegrationTests
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-      _postgres.StartAsync().GetAwaiter().GetResult();
-
       builder.UseEnvironment("Testing");
       builder.ConfigureServices(services =>
       {
@@ -44,21 +65,39 @@ namespace server.IntegrationTests
         {
           options.UseNpgsql(_postgres.GetConnectionString());
         });
+
+        services.AddAuthentication(options =>
+        {
+          options.DefaultAuthenticateScheme = TestAuthHandler.Scheme;
+          options.DefaultChallengeScheme = TestAuthHandler.Scheme;
+        })
+        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+            TestAuthHandler.Scheme,
+            options => { });
       });
     }
 
-    public async Task SeedAsync()
+    public async Task ResetDatabaseAsync()
     {
+      await using var connection = new NpgsqlConnection(_postgres.GetConnectionString());
+      await connection.OpenAsync();
+
+      await _respawner!.ResetAsync(connection);
+    }
+
+    public async Task SeedUserAsync()
+    {
+
       using var scope = Services.CreateScope();
       var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
       var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-      await context.Database.EnsureCreatedAsync();
-
       var user = new User
       {
+        Id = Guid.Parse("95ab17f3-25e4-41a5-aa2a-454f0091301b"),
         Email = "seed@test.com",
-        UserName = "seed@test.com"
+        UserName = "seed@test.com",
+        FullName = "Seed User"
       };
 
       await userManager.CreateAsync(user, "Password123!");

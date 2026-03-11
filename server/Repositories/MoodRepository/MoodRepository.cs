@@ -10,7 +10,7 @@ namespace server.Repositories.MoodRepository
 
     public async Task<Mood?> GetMoodByIdAsync(Guid moodId, CancellationToken cancellationToken = default)
     {
-      var mood = _context.Moods.FirstOrDefault(mood => mood.Id == moodId && mood.IsDeleted == false);
+      var mood = await _context.Moods.FirstOrDefaultAsync(mood => mood.Id == moodId && mood.IsDeleted == false, cancellationToken);
 
       return mood;
     }
@@ -26,7 +26,7 @@ namespace server.Repositories.MoodRepository
     {
       mood.UpdatedAt = DateTime.UtcNow;
       _context.Entry(mood).State = EntityState.Modified;
-      
+
       await _context.SaveChangesAsync(cancellationToken);
 
       return mood;
