@@ -16,6 +16,22 @@ export enum UserStatus {
   Active = "Active",
 }
 
+export enum SleepHours {
+  ZeroToTwo = "ZeroToTwo",
+  ThreeToFour = "ThreeToFour",
+  FiveToSix = "FiveToSix",
+  SevenToEight = "SevenToEight",
+  NinePlus = "NinePlus",
+}
+
+export enum MoodName {
+  VerySad = "VerySad",
+  Sad = "Sad",
+  Neutral = "Neutral",
+  Happy = "Happy",
+  VeryHappy = "VeryHappy",
+}
+
 export enum IdentityErrorCode {
   PasswordRequiresNonAlphanumeric = "PasswordRequiresNonAlphanumeric",
   PasswordRequiresDigit = "PasswordRequiresDigit",
@@ -24,6 +40,38 @@ export enum IdentityErrorCode {
   PasswordTooShort = "PasswordTooShort",
   DuplicateUserName = "DuplicateUserName",
   EmailIsInvalid = "EmailIsInvalid",
+  UserNotFound = "UserNotFound",
+}
+
+export enum Feeling {
+  Overwhelmed = "Overwhelmed",
+  Stressed = "Stressed",
+  Anxious = "Anxious",
+  Frustrated = "Frustrated",
+  Disappointed = "Disappointed",
+  Lonely = "Lonely",
+  Irritable = "Irritable",
+  Down = "Down",
+  Restless = "Restless",
+  Tired = "Tired",
+  Calm = "Calm",
+  Content = "Content",
+  Peaceful = "Peaceful",
+  Hopeful = "Hopeful",
+  Motivated = "Motivated",
+  Grateful = "Grateful",
+  Optimistic = "Optimistic",
+  Confident = "Confident",
+  Excited = "Excited",
+  Joyful = "Joyful",
+}
+
+export interface AnalyzeMoodRequestPOST {
+  /** @minItems 1 */
+  feelings: Feeling[];
+  mood: MoodName;
+  sleepHours: SleepHours;
+  moodDescription: string;
 }
 
 export interface AuthenticationBaseResponsePOST {

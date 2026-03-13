@@ -4,14 +4,24 @@ import {
   AuthenticationSignUpRequestPOST,
   SignUpErrorResponse,
 } from "@/lib/api/data-contracts";
+import { AUTHENTICATION_VALIDATOR_RECORDS } from "@/services/authentication/AuthenticationService";
 import { ApiError } from "next/dist/server/api-utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export const signUp = ({ authSignUpCreate }: Api) =>
   async function POST(req: NextRequest) {
-    const payload: AuthenticationSignUpRequestPOST = await req.json();
-
     try {
+      const payload: AuthenticationSignUpRequestPOST = await req.json();
+      for (const key in payload) {
+        if (
+          !AUTHENTICATION_VALIDATOR_RECORDS[key](
+            payload[key as keyof AuthenticationSignUpRequestPOST],
+          )
+        ) {
+          return badRequest(`Invalid ${key} format`);
+        }
+      }
+      
       const response = await authSignUpCreate(payload);
       const userInfo: AuthenticationBaseResponsePOST = await response.json();
 

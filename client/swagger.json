@@ -170,10 +170,69 @@
           }
         }
       }
+    },
+    "/api/mood": {
+      "post": {
+        "tags": [
+          "Mood"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeMoodRequestPOST"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeMoodRequestPOST"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeMoodRequestPOST"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AnalyzeMoodRequestPOST": {
+        "required": [
+          "feelings",
+          "mood",
+          "sleepHours",
+          "moodDescription"
+        ],
+        "type": "object",
+        "properties": {
+          "feelings": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Feeling"
+            }
+          },
+          "mood": {
+            "$ref": "#/components/schemas/MoodName"
+          },
+          "sleepHours": {
+            "$ref": "#/components/schemas/SleepHours"
+          },
+          "moodDescription": {
+            "type": "string"
+          }
+        }
+      },
       "AuthenticationBaseResponsePOST": {
         "required": [
           "status",
@@ -236,6 +295,30 @@
           }
         }
       },
+      "Feeling": {
+        "enum": [
+          "Overwhelmed",
+          "Stressed",
+          "Anxious",
+          "Frustrated",
+          "Disappointed",
+          "Lonely",
+          "Irritable",
+          "Down",
+          "Restless",
+          "Tired",
+          "Calm",
+          "Content",
+          "Peaceful",
+          "Hopeful",
+          "Motivated",
+          "Grateful",
+          "Optimistic",
+          "Confident",
+          "Excited",
+          "Joyful"
+        ]
+      },
       "IdentityErrorCode": {
         "enum": [
           "PasswordRequiresNonAlphanumeric",
@@ -244,7 +327,17 @@
           "PasswordRequiresUpper",
           "PasswordTooShort",
           "DuplicateUserName",
-          "EmailIsInvalid"
+          "EmailIsInvalid",
+          "UserNotFound"
+        ]
+      },
+      "MoodName": {
+        "enum": [
+          "VerySad",
+          "Sad",
+          "Neutral",
+          "Happy",
+          "VeryHappy"
         ]
       },
       "SignUpErrorResponse": {
@@ -261,6 +354,15 @@
           }
         }
       },
+      "SleepHours": {
+        "enum": [
+          "ZeroToTwo",
+          "ThreeToFour",
+          "FiveToSix",
+          "SevenToEight",
+          "NinePlus"
+        ]
+      },
       "UserStatus": {
         "enum": [
           "Inactive",
@@ -273,6 +375,9 @@
   "tags": [
     {
       "name": "Authentication"
+    },
+    {
+      "name": "Mood"
     }
   ]
 }

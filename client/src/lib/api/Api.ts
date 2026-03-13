@@ -11,6 +11,7 @@
  */
 
 import {
+  AnalyzeMoodRequestPOST,
   AuthenticationBaseResponsePOST,
   AuthenticationLoginRequestPOST,
   AuthenticationSignUpRequestPOST,
@@ -61,6 +62,21 @@ export class Api<
       body: data,
       type: ContentType.Json,
       format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Mood
+   * @name MoodCreate
+   * @request POST:/api/mood
+   */
+  moodCreate = (data: AnalyzeMoodRequestPOST, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/mood`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
       ...params,
     });
 }
