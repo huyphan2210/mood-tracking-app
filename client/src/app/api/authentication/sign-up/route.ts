@@ -8,6 +8,9 @@ import { AUTHENTICATION_VALIDATOR_RECORDS } from "@/services/authentication/Auth
 import { ApiError } from "next/dist/server/api-utils";
 import { NextRequest, NextResponse } from "next/server";
 
+const api = new Api();
+api.baseUrl = process.env.API_URL || "http://localhost:5281";
+
 export const signUp = ({ authSignUpCreate }: Api) =>
   async function POST(req: NextRequest) {
     try {
@@ -21,7 +24,7 @@ export const signUp = ({ authSignUpCreate }: Api) =>
           return badRequest(`Invalid ${key} format`);
         }
       }
-      
+
       const response = await authSignUpCreate(payload);
       const userInfo: AuthenticationBaseResponsePOST = await response.json();
 
