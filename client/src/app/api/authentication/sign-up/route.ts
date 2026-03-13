@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const api = new Api();
 api.baseUrl = process.env.API_URL || "http://localhost:5281";
+console.log("API URL:", api.baseUrl);
 
 export const signUp = ({ authSignUpCreate }: Api) =>
   async function POST(req: NextRequest) {
