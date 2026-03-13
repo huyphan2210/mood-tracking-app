@@ -17,6 +17,7 @@ import { BadServiceRequest, ServiceError } from "@/services/ServiceBase";
 import { useRouter } from "next/navigation";
 
 const SignUp: FC = () => {
+  const signUpFormId = "sign-up-form";
   const heading = "Create an account";
   const description = "Join to track your daily mood and sleep with ease.";
 
@@ -47,10 +48,17 @@ const SignUp: FC = () => {
         heading={heading}
         description={description}
         submitHandler={submitHandler}
+        attributes={{
+          id: signUpFormId,
+          "aria-errormessage": `${errorMessage ? signUpFormId + "_err" : undefined}`,
+        }}
       >
         <AuthenticationFields type="signup" />
         {errorMessage && (
-          <AuthenticationErrorMessage errorMessage={errorMessage} />
+          <AuthenticationErrorMessage
+            errorMessage={errorMessage}
+            attributes={{ id: `${signUpFormId}_err` }}
+          />
         )}
         <AuthenticationCta isLoading={isLoading} ctaContent="Sign Up">
           <span className={styles["sign-up_cta-note"]}>
