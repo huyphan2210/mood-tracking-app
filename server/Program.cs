@@ -75,11 +75,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    var port = builder.Configuration.GetValue<int>("PORT");
-    options.ListenAnyIP(port);
-});
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 var app = builder.Build();
 
