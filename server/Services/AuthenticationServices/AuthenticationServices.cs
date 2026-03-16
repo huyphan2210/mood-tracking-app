@@ -96,7 +96,7 @@ namespace server.Services.AuthenticationServices
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
-                new("status", UserStatus.NoFullName.ToString()),
+                new("status", user.FullName is null ? UserStatus.NoFullName.ToString() : UserStatus.Active.ToString()),
             };
 
             byte[] key = Convert.FromBase64String(_configuration["Jwt:Key"]);
