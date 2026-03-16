@@ -7,10 +7,7 @@ import {
 import { AUTHENTICATION_VALIDATOR_RECORDS } from "@/services/authentication/AuthenticationService";
 import { ApiError } from "next/dist/server/api-utils";
 import { NextRequest, NextResponse } from "next/server";
-
-const api = new Api();
-api.baseUrl = process.env.API_URL || "http://localhost:5281";
-console.log("API URL:", api.baseUrl);
+import { api } from "../../api.base";
 
 export const signUp = ({ authSignUpCreate }: Api) =>
   async function POST(req: NextRequest) {
@@ -70,4 +67,4 @@ const internalError = (message = "Authentication Service is unavailable") =>
     { status: 500 },
   );
 
-export const POST = signUp(new Api());
+export const POST = signUp(api);
