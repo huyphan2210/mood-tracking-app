@@ -24,8 +24,8 @@ namespace server.Controllers
 
         [HttpPost("login")]
         [ProducesResponseType(typeof(AuthenticationBaseResponsePOST), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AuthenticationBaseResponsePOST>> Login([FromBody] AuthenticationLoginRequestPOST authenticationLogin)
         {
             AuthenticationBaseResponsePOST result = await _authenticationServices.LoginAsync(authenticationLogin);

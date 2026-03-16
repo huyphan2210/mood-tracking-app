@@ -69,12 +69,25 @@ namespace server.Services.AuthenticationServices
 
         public async Task<AuthenticationBaseResponsePOST> LoginAsync(AuthenticationLoginRequestPOST authenticationLogin)
         {
-            User user = new();
+            var unauthorizedException = new UnauthorizedException(IdentityErrorCode.UserNotFound.ToString(), "Either the email or password is invalid");
+
+            var user = await _userManager.FindByEmailAsync(authenticationLogin.Email);
+            if (user is null || user.IsDeleted == true)
+            {
+                throw unauthorizedException;
+            }
+
+            var isUserValid = await _userManager.CheckPasswordAsync(user, authenticationLogin.Password);
+            if (!isUserValid)
+            {
+                throw unauthorizedException;
+            }
+
             return new AuthenticationBaseResponsePOST
             {
                 JWT = GenerateJwtToken(user),
-                Status = user.FullName is not null ? UserStatus.NoFullName : UserStatus.Active
-            }; ;
+                Status = user.FullName is null ? UserStatus.NoFullName : UserStatus.Active
+            };
         }
 
         private string GenerateJwtToken(User user)

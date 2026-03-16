@@ -195,5 +195,86 @@ namespace server.UnitTests.Services
 
       Assert.Equal("Failed to create a new user", result.Message);
     }
+
+    [Fact]
+    public async Task LoginAsync_ShouldThrowExceptionError_NonExistingEmailFound()
+    {
+      AuthenticationLoginRequestPOST request = new()
+      {
+        Email = "nonexistuser@yopmail.com",
+        Password = "123456@Password"
+      };
+
+      var result = await Assert.ThrowsAsync<UnauthorizedException>(() =>
+          _service.LoginAsync(request));
+
+      Assert.Equal(IdentityErrorCode.UserNotFound.ToString(), result.ErrorCode);
+      Assert.Equal("Either the email or password is invalid", result.Message);
+    }
+
+    [Fact]
+    public async Task LoginAsync_ShouldThrowExceptionError_UserIsSoftDeleted()
+    {
+      AuthenticationLoginRequestPOST request = new()
+      {
+        Email = "nonexistuser@yopmail.com",
+        Password = "123456@Password"
+      };
+
+      _userManagerMock.Setup(userManager => userManager.FindByEmailAsync(request.Email)).ReturnsAsync(new User
+      {
+        IsDeleted = true
+      });
+
+      var result = await Assert.ThrowsAsync<UnauthorizedException>(() =>
+          _service.LoginAsync(request));
+
+      Assert.Equal(IdentityErrorCode.UserNotFound.ToString(), result.ErrorCode);
+      Assert.Equal("Either the email or password is invalid", result.Message);
+    }
+
+    [Fact]
+    public async Task LoginAsync_ShouldThrowExceptionError_PasswordDoesNotMatch()
+    {
+      AuthenticationLoginRequestPOST request = new()
+      {
+        Email = "existinguser@yopmail.com",
+        Password = "123456@Password"
+      };
+
+      var user = new User();
+      _userManagerMock.Setup(userManager => userManager.FindByEmailAsync(request.Email)).ReturnsAsync(user);
+      _userManagerMock.Setup(userManager => userManager.CheckPasswordAsync(user, request.Password)).ReturnsAsync(false);
+
+      var result = await Assert.ThrowsAsync<UnauthorizedException>(() =>
+          _service.LoginAsync(request));
+
+      Assert.Equal(IdentityErrorCode.UserNotFound.ToString(), result.ErrorCode);
+      Assert.Equal("Either the email or password is invalid", result.Message);
+    }
+
+    [Fact]
+    public async Task LoginAsync_ShouldReturnJWT_EmailAndPasswordAreValid()
+    {
+      AuthenticationLoginRequestPOST request = new()
+      {
+        Email = "existinguser@yopmail.com",
+        Password = "123456@Password"
+      };
+
+      var user = new User
+      {
+        Email = request.Email,
+        UserName = request.Email,
+      };
+
+      _userManagerMock.Setup(userManager => userManager.FindByEmailAsync(request.Email)).ReturnsAsync(user);
+      _userManagerMock.Setup(userManager => userManager.CheckPasswordAsync(user, request.Password)).ReturnsAsync(true);
+
+      var result = await _service.LoginAsync(request);
+
+      Assert.NotNull(result.JWT);
+      Assert.Equal(UserStatus.NoFullName, result.Status);
+    }
   }
 }

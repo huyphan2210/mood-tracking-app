@@ -8,7 +8,7 @@ namespace server.IntegrationTests
   {
     protected readonly HttpClient _httpClient = factory.CreateClient();
     protected readonly IServiceScopeFactory _scopeFactory = factory.Services.GetRequiredService<IServiceScopeFactory>();
-    private readonly CustomWebApplicationFactory _factory = factory;
+    protected readonly CustomWebApplicationFactory _factory = factory;
 
     public async Task InitializeAsync()
     {
