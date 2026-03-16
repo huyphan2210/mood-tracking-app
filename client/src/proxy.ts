@@ -33,7 +33,10 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL(PATH.ONBOARDING, req.url));
   }
 
-  if (isBypassPath) {
+  if (
+    isBypassPath ||
+    (decodedJwt.status === UserStatus.Active && pathname === PATH.ONBOARDING)
+  ) {
     return NextResponse.redirect(new URL(PATH.HOME, req.url));
   }
 
