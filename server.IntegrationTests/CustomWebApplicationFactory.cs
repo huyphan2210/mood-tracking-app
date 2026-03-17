@@ -85,14 +85,13 @@ namespace server.IntegrationTests
       await _respawner!.ResetAsync(connection);
     }
 
-    public async Task SeedUserAsync()
+    public async Task SeedUserAsync(User? user = null)
     {
-
       using var scope = Services.CreateScope();
       var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
       var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-      var user = new User
+      var newUser = user ?? new User
       {
         Id = Guid.Parse("95ab17f3-25e4-41a5-aa2a-454f0091301b"),
         Email = "seed@test.com",
@@ -100,7 +99,7 @@ namespace server.IntegrationTests
         FullName = "Seed User"
       };
 
-      await userManager.CreateAsync(user, "Password123!");
+      await userManager.CreateAsync(newUser, "Password123!");
     }
   }
 }

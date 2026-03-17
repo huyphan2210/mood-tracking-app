@@ -3,28 +3,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { Api } from "@/lib/api/Api";
 import {
   AuthenticationBaseResponsePOST,
-  AuthenticationSignUpRequestPOST,
-  SignUpErrorResponse,
+  AuthenticationLoginRequestPOST,
+  ErrorResponse,
 } from "@/lib/api/data-contracts";
 
 import { AUTHENTICATION_VALIDATOR_RECORDS } from "@/services/authentication/AuthenticationService";
-import { api, badRequest, internalError } from "../../api.base";
+import {
+  api,
+  badRequest,
+  internalError,
+  unauthorizedRequest,
+} from "../../api.base";
 
-export const signUp = ({ authSignUpCreate }: Api) =>
+export const login = ({ authLoginCreate }: Api) =>
   async function POST(req: NextRequest) {
     try {
-      const payload: AuthenticationSignUpRequestPOST = await req.json();
+      const payload: AuthenticationLoginRequestPOST = await req.json();
       for (const key in payload) {
         if (
           !AUTHENTICATION_VALIDATOR_RECORDS[key](
-            payload[key as keyof AuthenticationSignUpRequestPOST],
+            payload[key as keyof AuthenticationLoginRequestPOST],
           )
         ) {
           return badRequest(`Invalid ${key} format`);
         }
       }
 
-      const response = await authSignUpCreate(payload);
+      const response = await authLoginCreate(payload);
       const userInfo: AuthenticationBaseResponsePOST = await response.json();
 
       const returnedResponse = NextResponse.json(userInfo, { status: 200 });
@@ -38,9 +43,9 @@ export const signUp = ({ authSignUpCreate }: Api) =>
 
       return returnedResponse;
     } catch (error) {
-      if (error instanceof Response && error.status === 400) {
-        const errorResponse: SignUpErrorResponse = await error.json();
-        return badRequest(errorResponse.message);
+      if (error instanceof Response && error.status === 401) {
+        const errorResponse: ErrorResponse = await error.json();
+        return unauthorizedRequest(errorResponse.message);
       }
 
       console.error(error);
@@ -48,4 +53,4 @@ export const signUp = ({ authSignUpCreate }: Api) =>
     }
   };
 
-export const POST = signUp(api);
+export const POST = login(api);

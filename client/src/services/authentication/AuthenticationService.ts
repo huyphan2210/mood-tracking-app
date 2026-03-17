@@ -1,5 +1,6 @@
 import {
   AuthenticationBaseResponsePOST,
+  AuthenticationLoginRequestPOST,
   AuthenticationSignUpRequestPOST,
 } from "@/lib/api/data-contracts";
 import { BadServiceRequest, POSTApi, ServiceError } from "../ServiceBase";
@@ -22,23 +23,9 @@ export const AUTHENTICATION_VALIDATOR_RECORDS: Record<
 
 export const signUp = async (formData: FormData) => {
   try {
-    const payload: AuthenticationSignUpRequestPOST = {
-      email: "",
-      password: "",
-    };
+    const payload = getPayloadFromFormData(formData);
 
-    for (const [key, value] of formData.entries()) {
-      if (key in payload) {
-        const formValue = value as string;
-        if (!AUTHENTICATION_VALIDATOR_RECORDS[key](formValue)) {
-          throw new BadServiceRequest(`Invalid ${key} format.`);
-        }
-
-        payload[key as keyof AuthenticationSignUpRequestPOST] = formValue;
-      }
-    }
-
-    await POSTApi<
+    return await POSTApi<
       AuthenticationSignUpRequestPOST,
       AuthenticationBaseResponsePOST
     >(`${API_URL}/sign-up`, payload);
@@ -49,4 +36,42 @@ export const signUp = async (formData: FormData) => {
 
     throw new ServiceError("SignUp Service is temporarily unavailable");
   }
+};
+
+export const login = async (formData: FormData) => {
+  try {
+    const payload = getPayloadFromFormData(formData);
+
+    return await POSTApi<
+      AuthenticationLoginRequestPOST,
+      AuthenticationBaseResponsePOST
+    >(`${API_URL}/login`, payload);
+  } catch (error) {
+    if (error instanceof ServiceError || error instanceof BadServiceRequest) {
+      throw error;
+    }
+
+    throw new ServiceError("Login Service is temporarily unavailable");
+  }
+};
+
+const getPayloadFromFormData = (formData: FormData) => {
+  const payload:
+    | AuthenticationSignUpRequestPOST
+    | AuthenticationLoginRequestPOST = {
+    email: "",
+    password: "",
+  };
+
+  for (const [key, value] of formData.entries()) {
+    if (key in payload) {
+      const formValue = value as string;
+      if (!AUTHENTICATION_VALIDATOR_RECORDS[key](formValue)) {
+        throw new BadServiceRequest(`Invalid ${key} format.`);
+      }
+
+      payload[key as keyof AuthenticationSignUpRequestPOST] = formValue;
+    }
+  }
+  return payload;
 };
