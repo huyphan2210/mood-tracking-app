@@ -16,7 +16,7 @@ namespace server.Controllers
         [ProducesResponseType(typeof(AuthenticationBaseResponsePOST), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SignUpErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthenticationBaseResponsePOST>> SignUp([FromBody] AuthenticationSignUpRequestPOST authenticationSignUp)
+        public async Task<ActionResult<AuthenticationBaseResponsePOST>> SignUp([FromBody] SignUpRequestPOST authenticationSignUp)
         {
             AuthenticationBaseResponsePOST result = await _authenticationServices.SignUpAsync(authenticationSignUp);
             return Ok(result);
@@ -26,7 +26,7 @@ namespace server.Controllers
         [ProducesResponseType(typeof(AuthenticationBaseResponsePOST), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<AuthenticationBaseResponsePOST>> Login([FromBody] AuthenticationLoginRequestPOST authenticationLogin)
+        public async Task<ActionResult<AuthenticationBaseResponsePOST>> Login([FromBody] LoginRequestPOST authenticationLogin)
         {
             AuthenticationBaseResponsePOST result = await _authenticationServices.LoginAsync(authenticationLogin);
             return Ok(result);
