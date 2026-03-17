@@ -18,6 +18,9 @@ using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
 using server.Services.LLMServices;
 using server.Services.MoodServices;
+using server.Services.UserServices;
+using CloudinaryDotNet;
+using server.Clients.StorageClient;
 
 const string TEST_ENV = "Testing";
 const string ALLOW_SPECIFIC_ORIGIN = "AllowSpecificOrigin";
@@ -104,6 +107,7 @@ app.Run();
 static void AddCustomServices(WebApplicationBuilder builder)
 {
     builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+    builder.Services.AddScoped<IUserSevices, UserServices>();
     builder.Services.AddScoped<ILLMServices, LLMServices>();
     builder.Services.AddScoped<IMoodServices, MoodServices>();
 }
@@ -126,6 +130,15 @@ static void AddCustomClient(WebApplicationBuilder builder)
     });
 
     builder.Services.AddSingleton<IGenAIClient, GenAIClient>();
+
+    builder.Services.AddSingleton(sp =>
+    {
+        var configuration = sp.GetRequiredService<IConfiguration>();
+        var apiKey = configuration["Cloudinary:URL"];
+        return new Cloudinary(apiKey);
+    });
+
+    builder.Services.AddSingleton<IStorageClient, StorageClient>();
 }
 
 static void AddCustomRepositories(WebApplicationBuilder builder)
