@@ -51,7 +51,7 @@ export const login = async (formData: FormData) => {
       throw error;
     }
 
-    throw new ServiceError("SignUp Service is temporarily unavailable");
+    throw new ServiceError("Login Service is temporarily unavailable");
   }
 };
 
