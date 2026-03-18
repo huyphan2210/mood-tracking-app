@@ -22,7 +22,7 @@ namespace server.IntegrationTests.Mood
         SleepHours = SleepHours.ThreeToFour,
         MoodDescription = "Test Mood Description"
       };
-      var httpRequest = CreateAuthorizedRequest(HttpMethod.Post, requestUrl, request);
+      var httpRequest = CreateAuthorizedRequestForJson(HttpMethod.Post, requestUrl, request);
 
       var response = await _httpClient.SendAsync(httpRequest);
 
@@ -48,7 +48,7 @@ namespace server.IntegrationTests.Mood
         moodDescription = "Test Mood Description"
       };
 
-      var httpRequest = CreateAuthorizedRequest(HttpMethod.Post, requestUrl, request);
+      var httpRequest = CreateAuthorizedRequestForJson(HttpMethod.Post, requestUrl, request);
 
       var response = await _httpClient.SendAsync(httpRequest);
 

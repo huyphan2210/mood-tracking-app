@@ -19,15 +19,18 @@ namespace server.IntegrationTests
 
     public Task DisposeAsync() => Task.CompletedTask;
 
-    protected static HttpRequestMessage CreateAuthorizedRequest(HttpMethod method, string url, object body)
+    protected static HttpRequestMessage CreateAuthorizedRequestForJson(HttpMethod method, string url, object body, bool withNonExistUser = false)
     {
       var request = new HttpRequestMessage(method, url)
       {
         Content = JsonContent.Create(body)
       };
 
-      request.Headers.Authorization =
-          new AuthenticationHeaderValue(TestAuthHandler.Scheme);
+      request.Headers.Authorization = new AuthenticationHeaderValue(TestAuthHandler.Scheme);
+      if (withNonExistUser)
+      {
+        request.Headers.Add("X-Test-User", "non-existing");
+      }
 
       return request;
     }

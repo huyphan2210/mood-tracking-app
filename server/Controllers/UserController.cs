@@ -18,8 +18,9 @@ namespace server.Controllers
     [HttpPatch("update")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestPATCH request)
+    public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestPATCH request)
     {
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
       await _userServices.UpdateUserAsync(Guid.Parse(userId), request);

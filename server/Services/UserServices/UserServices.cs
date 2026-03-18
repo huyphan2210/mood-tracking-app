@@ -10,12 +10,14 @@ namespace server.Services.UserServices
   public class UserServices(
     UserManager<User> userManager,
     IAuthenticationServices authenticationServices,
-    IStorageClient storageClient
+    IStorageClient storageClient,
+    ILogger<IUserSevices> logger
   ) : IUserSevices
   {
     private readonly UserManager<User> _userManager = userManager;
     private readonly IAuthenticationServices _authenticationServices = authenticationServices;
     private readonly IStorageClient _storageClient = storageClient;
+    private readonly ILogger<IUserSevices> _logger = logger;
 
     public async Task UpdateUserAsync(Guid userId, UpdateUserRequestPATCH request)
     {
@@ -32,6 +34,12 @@ namespace server.Services.UserServices
         }
 
         var uploadImageResult = await _storageClient.UploadImageAsync(request.AvatarImage);
+        if (uploadImageResult.Error is not null)
+        {
+          _logger.LogError($"Failed to upload image of user {userId} to Cloudinary: {uploadImageResult.Error.Message}");
+          throw new Exception($"Failed to upload image of user {userId} to Cloudinary: {uploadImageResult.Error.Message}");
+        }
+
         user.AvatarURL = uploadImageResult.Url.ToString();
       }
 
