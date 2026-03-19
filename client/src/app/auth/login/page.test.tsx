@@ -1,6 +1,6 @@
-jest.mock("../../../services/authentication/AuthenticationService", () => {
+jest.mock("../../../services/auth/AuthenticationService", () => {
   const actual = jest.requireActual(
-    "../../../services/authentication/AuthenticationService",
+    "../../../services/auth/AuthenticationService",
   );
 
   return {
@@ -11,7 +11,7 @@ jest.mock("../../../services/authentication/AuthenticationService", () => {
 
 import { screen, render, within, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { login } from "@/services/authentication/AuthenticationService";
+import { login } from "@/services/auth/AuthenticationService";
 import Login from "./page";
 import { ServiceError } from "@/services/ServiceBase";
 
@@ -37,7 +37,7 @@ describe("Login", () => {
     const emailInput = within(form).getByLabelText(/email address/i);
     const passwordInput = within(form).getByLabelText(/password/i);
     const submitButton = within(form).getByRole("button", { name: /log in/i });
-    const signUpNavigator = within(form).getByRole("link", { name: /sign up/i });
+    const loginNavigator = within(form).getByRole("link", { name: /sign up/i });
     const alert = within(form).queryByRole("alert");
 
     await act(async () => {

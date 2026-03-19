@@ -11,7 +11,7 @@ import HomeNavigation from "@/components/home-navigation/home-navigation";
 import AuthenticationErrorMessage from "@/components/authentication/authentication-error-message/authentication-error-message";
 import { useRouter } from "next/navigation";
 import { BadServiceRequest, ServiceError } from "@/services/ServiceBase";
-import { login } from "@/services/authentication/AuthenticationService";
+import { login } from "@/services/auth/AuthenticationService";
 import { UserStatus } from "@/lib/api/data-contracts";
 
 const Login: FC = () => {

@@ -1,6 +1,6 @@
-jest.mock("../../../services/authentication/AuthenticationService", () => {
+jest.mock("../../../services/auth/AuthenticationService", () => {
   const actual = jest.requireActual(
-    "../../../services/authentication/AuthenticationService",
+    "../../../services/auth/AuthenticationService",
   );
 
   return {
@@ -11,7 +11,7 @@ jest.mock("../../../services/authentication/AuthenticationService", () => {
 
 import { screen, render, within, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { signUp } from "@/services/authentication/AuthenticationService";
+import { signUp } from "@/services/auth/AuthenticationService";
 import SignUp from "./page";
 import { ServiceError } from "@/services/ServiceBase";
 

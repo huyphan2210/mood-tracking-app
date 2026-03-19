@@ -5,8 +5,8 @@ enum PATH {
   ONBOARDING = "/user/onboarding",
 }
 
-export const AUTHENTICATION_PATHS: string[] = [
-  PATH.HOME,
+export const AUTH_ONBOARDING_PATHS: string[] = [
+  PATH.ONBOARDING,
   PATH.LOGIN,
   PATH.SIGNUP,
 ];

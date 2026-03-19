@@ -1,11 +1,11 @@
 import {
   AuthenticationBaseResponsePOST,
-  AuthenticationLoginRequestPOST,
-  AuthenticationSignUpRequestPOST,
+  LoginRequestPOST,
+  SignUpRequestPOST,
 } from "@/lib/api/data-contracts";
 import { BadServiceRequest, POSTApi, ServiceError } from "../ServiceBase";
 
-const API_URL = "/api/authentication";
+const API_URL = "/api/auth";
 const EMAIL_VALIDATOR = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_VALIDATOR = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
 
@@ -25,10 +25,10 @@ export const signUp = async (formData: FormData) => {
   try {
     const payload = getPayloadFromFormData(formData);
 
-    return await POSTApi<
-      AuthenticationSignUpRequestPOST,
-      AuthenticationBaseResponsePOST
-    >(`${API_URL}/sign-up`, payload);
+    return await POSTApi<SignUpRequestPOST, AuthenticationBaseResponsePOST>(
+      `${API_URL}/sign-up`,
+      payload,
+    );
   } catch (error) {
     if (error instanceof ServiceError || error instanceof BadServiceRequest) {
       throw error;
@@ -42,10 +42,10 @@ export const login = async (formData: FormData) => {
   try {
     const payload = getPayloadFromFormData(formData);
 
-    return await POSTApi<
-      AuthenticationLoginRequestPOST,
-      AuthenticationBaseResponsePOST
-    >(`${API_URL}/login`, payload);
+    return await POSTApi<LoginRequestPOST, AuthenticationBaseResponsePOST>(
+      `${API_URL}/login`,
+      payload,
+    );
   } catch (error) {
     if (error instanceof ServiceError || error instanceof BadServiceRequest) {
       throw error;
@@ -56,9 +56,7 @@ export const login = async (formData: FormData) => {
 };
 
 const getPayloadFromFormData = (formData: FormData) => {
-  const payload:
-    | AuthenticationSignUpRequestPOST
-    | AuthenticationLoginRequestPOST = {
+  const payload: SignUpRequestPOST | LoginRequestPOST = {
     email: "",
     password: "",
   };
@@ -70,7 +68,7 @@ const getPayloadFromFormData = (formData: FormData) => {
         throw new BadServiceRequest(`Invalid ${key} format.`);
       }
 
-      payload[key as keyof AuthenticationSignUpRequestPOST] = formValue;
+      payload[key as keyof SignUpRequestPOST] = formValue;
     }
   }
   return payload;

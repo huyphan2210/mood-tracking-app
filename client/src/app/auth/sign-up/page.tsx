@@ -12,7 +12,7 @@ import AuthenticationCta from "@/components/authentication/authentication-cta/au
 import HomeNavigation from "@/components/home-navigation/home-navigation";
 
 import AuthenticationErrorMessage from "@/components/authentication/authentication-error-message/authentication-error-message";
-import { signUp } from "@/services/authentication/AuthenticationService";
+import { signUp } from "@/services/auth/AuthenticationService";
 import { BadServiceRequest, ServiceError } from "@/services/ServiceBase";
 import { useRouter } from "next/navigation";
 
