@@ -27,12 +27,25 @@ namespace server.IntegrationTests.Users
     }
 
     [Fact]
-    public async Task UpdateUser_ShouldThrow404NotFound_UserNotFound()
+    public async Task UpdateUser_ShouldThrow400BadRequest_NoParamIsProvided()
     {
       var request = new UpdateUserRequestPATCH();
-      var httpRequest = CreateAuthorizedRequestForJson(HttpMethod.Patch, requestUrl, request, true);
+      var httpRequest = CreateAuthorizedRequestForJson(HttpMethod.Patch, requestUrl, request);
 
       var response = await _httpClient.SendAsync(httpRequest);
+      var result = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+
+      Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+      Assert.Equal("VALIDATION_ERROR", result?.ErrorCode);
+    }
+
+    [Fact]
+    public async Task UpdateUser_ShouldThrow404NotFound_UserDoesNotExist()
+    {
+      var request = CreateHttpRequestWithInvalidImage("avatar.jpg", 250);
+      request.Headers.Add("X-Test-User", "non-existing");
+
+      var response = await _httpClient.SendAsync(request);
       var result = await response.Content.ReadFromJsonAsync<ErrorResponse>();
 
       Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -74,20 +87,19 @@ namespace server.IntegrationTests.Users
       Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
       var result = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-      Assert.Equal("ImageIsInvalid", result?.ErrorCode);
-      Assert.Equal("Unsupported file type or size. Please upload a PNG or JPEG with the maximum of 250KB", result?.Message);
+      Assert.Equal("VALIDATION_ERROR", result?.ErrorCode);
+      Assert.Equal("Please upload an image with the maximum size of 250KB.", result?.Message);
     }
 
     [Fact]
     public async Task UpdateUser_ShouldThrow400BadRequest_ImageIsNotPNGorJPG()
     {
-
       var response = await _httpClient.SendAsync(CreateHttpRequestWithInvalidImage("avatar.txt", 240));
       Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
       var result = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-      Assert.Equal("ImageIsInvalid", result?.ErrorCode);
-      Assert.Equal("Unsupported file type or size. Please upload a PNG or JPEG with the maximum of 250KB", result?.Message);
+      Assert.Equal("VALIDATION_ERROR", result?.ErrorCode);
+      Assert.Equal("Unsupported file type or size. Please upload a PNG or JPEG.", result?.Message);
     }
 
     [Fact]

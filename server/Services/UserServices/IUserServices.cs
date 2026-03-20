@@ -4,6 +4,6 @@ namespace server.Services.UserServices
 {
   public interface IUserSevices
   {
-    public Task UpdateUserAsync(Guid userId, UpdateUserRequestPATCH request);
+    public Task<UpdateUserResponse> UpdateUserAsync(Guid userId, UpdateUserRequestPATCH request);
   }
 }

@@ -16,8 +16,8 @@ namespace server.Clients.StorageClient
         File = new FileDescription(file.FileName, stream),
         Folder = "mood-tracking-app",
         UseFilename = true,
-        UniqueFilename = false,
-        Overwrite = true
+        UniqueFilename = true,
+        Overwrite = true,
       };
 
       return await _cloudinary.UploadAsync(uploadParams);

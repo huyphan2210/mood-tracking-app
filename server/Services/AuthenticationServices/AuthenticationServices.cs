@@ -90,7 +90,7 @@ namespace server.Services.AuthenticationServices
             };
         }
 
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
             {

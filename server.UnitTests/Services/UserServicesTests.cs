@@ -1,6 +1,7 @@
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Moq;
 using server.Clients.StorageClient;
 using server.Domain.Entities;
@@ -18,6 +19,7 @@ namespace server.UnitTests.Services
     private readonly Mock<UserManager<User>> _userManagerMock = CreateUserManagerMock.CreateMockUserManager();
     private readonly Mock<IAuthenticationServices> _authenticationServicesMock = new();
     private readonly Mock<IStorageClient> _storageClientMock = new();
+    private readonly Mock<ILogger<UserServices>> _loggerMock = new();
     private readonly UserServices _userServices;
 
     private static IFormFile CreateMockFormFile(string fileName, int sizeInKB)
@@ -39,7 +41,8 @@ namespace server.UnitTests.Services
       _userServices = new(
         _userManagerMock.Object,
         _authenticationServicesMock.Object,
-        _storageClientMock.Object
+        _storageClientMock.Object,
+        _loggerMock.Object
       );
     }
 
@@ -57,52 +60,6 @@ namespace server.UnitTests.Services
       var result = await Assert.ThrowsAsync<NotFoundException>(async () => await _userServices.UpdateUserAsync(Guid.NewGuid(), request));
       Assert.Equal(IdentityErrorCode.UserNotFound.ToString(), result.ErrorCode);
       Assert.Equal("No User is Found", result.Message);
-    }
-
-    [Fact]
-    public async Task UpdateUserAsync_ShouldThrowValidationExpcetion_FileIsNotImage()
-    {
-      var user = new User
-      {
-        FullName = "Test"
-      };
-
-      var request = new UpdateUserRequestPATCH
-      {
-        FullName = "New Name",
-        AvatarImage = CreateMockFormFile("avatar.txt", 240)
-      };
-
-      _authenticationServicesMock.Setup(
-        services => services.FindUserByIdAsync(It.IsAny<Guid>())
-      ).ReturnsAsync(user);
-
-      var result = await Assert.ThrowsAsync<ValidationException>(async () => await _userServices.UpdateUserAsync(Guid.NewGuid(), request));
-
-      Assert.Equal("ImageIsInvalid", result.ErrorCode);
-    }
-
-    [Fact]
-    public async Task UpdateUserAsync_ShouldThrowValidationExpcetion_FileIsLargerThan250KB()
-    {
-      var user = new User
-      {
-        FullName = "Test"
-      };
-
-      var request = new UpdateUserRequestPATCH
-      {
-        FullName = "New Name",
-        AvatarImage = CreateMockFormFile("avatar.jpg", 260)
-      };
-
-      _authenticationServicesMock.Setup(
-        services => services.FindUserByIdAsync(It.IsAny<Guid>())
-      ).ReturnsAsync(user);
-
-      var result = await Assert.ThrowsAsync<ValidationException>(async () => await _userServices.UpdateUserAsync(Guid.NewGuid(), request));
-
-      Assert.Equal("ImageIsInvalid", result.ErrorCode);
     }
 
     [Fact]
@@ -148,7 +105,7 @@ namespace server.UnitTests.Services
 
       _storageClientMock.Setup(client => client.UploadImageAsync(request.AvatarImage)).ReturnsAsync(new ImageUploadResult
       {
-        Url = new Uri("https://example.com/")
+        SecureUrl = new Uri("https://example.com/")
       });
 
       await _userServices.UpdateUserAsync(Guid.NewGuid(), request);
