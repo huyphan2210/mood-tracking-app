@@ -18,6 +18,7 @@ import {
   LoginRequestPOST,
   SignUpErrorResponse,
   SignUpRequestPOST,
+  UpdateUserResponse,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
@@ -88,11 +89,12 @@ export class Api<
     },
     params: RequestParams = {},
   ) =>
-    this.request<void, ErrorResponse>({
+    this.request<UpdateUserResponse, ErrorResponse>({
       path: `/api/user/update`,
       method: "PATCH",
       body: data,
       type: ContentType.UrlEncoded,
+      format: "json",
       ...params,
     });
 }

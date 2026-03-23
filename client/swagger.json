@@ -245,7 +245,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -473,6 +490,21 @@
           "SevenToEight",
           "NinePlus"
         ]
+      },
+      "UpdateUserResponse": {
+        "required": [
+          "status",
+          "jwt"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/UserStatus"
+          },
+          "jwt": {
+            "type": "string"
+          }
+        }
       },
       "UserStatus": {
         "enum": [

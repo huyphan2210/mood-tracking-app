@@ -101,3 +101,8 @@ export interface SignUpRequestPOST {
   email: string;
   password: string;
 }
+
+export interface UpdateUserResponse {
+  status: UserStatus;
+  jwt: string;
+}
