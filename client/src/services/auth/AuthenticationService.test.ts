@@ -6,7 +6,6 @@ jest.mock("../ServiceBase", () => {
   };
 });
 
-import { describe } from "node:test";
 import { BadServiceRequest, ServiceError, POSTApi } from "../ServiceBase";
 import { login, signUp } from "./AuthenticationService";
 
