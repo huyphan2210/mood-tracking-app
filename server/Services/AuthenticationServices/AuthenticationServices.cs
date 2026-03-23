@@ -23,7 +23,7 @@ namespace server.Services.AuthenticationServices
         private readonly IConfiguration _configuration = configuration;
         private readonly ILogger<AuthenticationServices> _logger = logger;
 
-        public async Task<AuthenticationBaseResponsePOST> SignUpAsync(AuthenticationSignUpRequestPOST authenticationSignUp)
+        public async Task<AuthenticationBaseResponsePOST> SignUpAsync(SignUpRequestPOST authenticationSignUp)
         {
             if (!new EmailAddressAttribute().IsValid(authenticationSignUp.Email))
             {
@@ -67,7 +67,7 @@ namespace server.Services.AuthenticationServices
             };
         }
 
-        public async Task<AuthenticationBaseResponsePOST> LoginAsync(AuthenticationLoginRequestPOST authenticationLogin)
+        public async Task<AuthenticationBaseResponsePOST> LoginAsync(LoginRequestPOST authenticationLogin)
         {
             var unauthorizedException = new UnauthorizedException(IdentityErrorCode.UserNotFound.ToString(), "Either the email or password is invalid");
 
@@ -90,7 +90,7 @@ namespace server.Services.AuthenticationServices
             };
         }
 
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
             {

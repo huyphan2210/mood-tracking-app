@@ -15,10 +15,10 @@ namespace server.IntegrationTests
   public class CustomWebApplicationFactory : WebApplicationFactory<Program>
   {
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:15")
-        .WithDatabase("testdb")
-        .WithUsername("postgres")
-        .WithPassword("postgres")
-        .Build();
+      .WithDatabase("testdb")
+      .WithUsername("postgres")
+      .WithPassword("postgres")
+      .Build();
 
     private Respawner? _respawner;
 
@@ -72,8 +72,8 @@ namespace server.IntegrationTests
           options.DefaultChallengeScheme = TestAuthHandler.Scheme;
         })
         .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-            TestAuthHandler.Scheme,
-            options => { });
+          TestAuthHandler.Scheme,
+          options => { });
       });
     }
 
@@ -91,13 +91,7 @@ namespace server.IntegrationTests
       var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
       var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-      var newUser = user ?? new User
-      {
-        Id = Guid.Parse("95ab17f3-25e4-41a5-aa2a-454f0091301b"),
-        Email = "seed@test.com",
-        UserName = "seed@test.com",
-        FullName = "Seed User"
-      };
+      var newUser = user ?? SeedData.DefaultSeedUser;
 
       await userManager.CreateAsync(newUser, "Password123!");
     }

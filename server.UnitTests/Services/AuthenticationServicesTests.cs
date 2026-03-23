@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using server.Domain.Entities;
 using server.Domain.Enums.User;
 using server.DTOs.Authentication;
 using server.Exceptions;
 using server.Services.AuthenticationServices;
+using server.UnitTests.Utilities;
 
 namespace server.UnitTests.Services
 {
@@ -19,35 +19,10 @@ namespace server.UnitTests.Services
     private readonly Mock<ILogger<AuthenticationServices>> _loggerMock;
     private readonly AuthenticationServices _service;
 
-    private static Mock<UserManager<User>> CreateMockUserManager()
-    {
-      var store = new Mock<IUserStore<User>>();
-      var options = new Mock<IOptions<IdentityOptions>>();
-      var passwordHasher = new Mock<IPasswordHasher<User>>();
-      var userValidators = new List<IUserValidator<User>>();
-      var passwordValidators = new List<IPasswordValidator<User>>();
-      var keyNormalizer = new Mock<ILookupNormalizer>();
-      var errors = new IdentityErrorDescriber();
-      var services = new Mock<IServiceProvider>();
-      var logger = new Mock<ILogger<UserManager<User>>>();
-
-      return new Mock<UserManager<User>>(
-          store.Object,
-          options.Object,
-          passwordHasher.Object,
-          userValidators,
-          passwordValidators,
-          keyNormalizer.Object,
-          errors,
-          services.Object,
-          logger.Object
-      );
-    }
-
     public AuthenticationServicesTests()
     {
       var store = new Mock<IUserStore<User>>();
-      _userManagerMock = CreateMockUserManager();
+      _userManagerMock = CreateUserManagerMock.CreateMockUserManager();
 
       _configurationMock = new Mock<IConfiguration>();
       _configurationMock
@@ -65,7 +40,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task SignUpAsync_ShouldReturnAuthenticationBaseResponsePOST_Succeed()
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "newuser@yopmail.com",
         Password = "123456@NewPassword"
@@ -87,7 +62,7 @@ namespace server.UnitTests.Services
     [InlineData("ABCD1@")]
     public async Task SignUpAsync_ShouldThrowValidationError_WhenPasswordIsInvalid(string invalidPassword)
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "newuser@yopmail.com",
         Password = invalidPassword
@@ -138,7 +113,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task SignUpAsync_ShouldThrowValidationError_WhenUserIsExisted()
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "newuser@yopmail.com",
         Password = "123456@NewPassword"
@@ -161,7 +136,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task SignUpAsync_ShouldThrowValidationError_WhenEmailIsInvalid()
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "seed",
         Password = "123456@NewPassword"
@@ -176,7 +151,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task SignUpAsync_ShouldThrowExceptionError_UnknownException()
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "newuser@yopmail.com",
         Password = "123456@NewPassword"
@@ -199,7 +174,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task LoginAsync_ShouldThrowExceptionError_NonExistingEmailFound()
     {
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "nonexistuser@yopmail.com",
         Password = "123456@Password"
@@ -215,7 +190,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task LoginAsync_ShouldThrowExceptionError_UserIsSoftDeleted()
     {
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "nonexistuser@yopmail.com",
         Password = "123456@Password"
@@ -236,7 +211,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task LoginAsync_ShouldThrowExceptionError_PasswordDoesNotMatch()
     {
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "existinguser@yopmail.com",
         Password = "123456@Password"
@@ -256,7 +231,7 @@ namespace server.UnitTests.Services
     [Fact]
     public async Task LoginAsync_ShouldReturnJWT_EmailAndPasswordAreValid()
     {
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "existinguser@yopmail.com",
         Password = "123456@Password"

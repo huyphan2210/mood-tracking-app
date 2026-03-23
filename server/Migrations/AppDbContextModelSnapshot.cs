@@ -253,6 +253,10 @@ namespace server.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("access_failed_count");
 
+                    b.Property<string>("AvatarURL")
+                        .HasColumnType("text")
+                        .HasColumnName("avatar_url");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text")

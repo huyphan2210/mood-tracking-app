@@ -3,7 +3,7 @@
 import { ChangeEvent, FC, useRef, useState } from "react";
 import styles from "./authentication-fields.module.scss";
 
-import { AUTHENTICATION_VALIDATOR_RECORDS } from "@/services/authentication/AuthenticationService";
+import { AUTHENTICATION_VALIDATOR_RECORDS } from "@/services/auth/AuthenticationService";
 
 import invalidIcon from "@/icons/invalid.svg";
 import Image from "next/image";

@@ -13,10 +13,12 @@
 import {
   AnalyzeMoodRequestPOST,
   AuthenticationBaseResponsePOST,
-  AuthenticationLoginRequestPOST,
-  AuthenticationSignUpRequestPOST,
   ErrorResponse,
+  IFormFile,
+  LoginRequestPOST,
   SignUpErrorResponse,
+  SignUpRequestPOST,
+  UpdateUserResponse,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
@@ -30,10 +32,7 @@ export class Api<
    * @name AuthSignUpCreate
    * @request POST:/api/auth/sign-up
    */
-  authSignUpCreate = (
-    data: AuthenticationSignUpRequestPOST,
-    params: RequestParams = {},
-  ) =>
+  authSignUpCreate = (data: SignUpRequestPOST, params: RequestParams = {}) =>
     this.request<
       AuthenticationBaseResponsePOST,
       SignUpErrorResponse | ErrorResponse
@@ -52,11 +51,8 @@ export class Api<
    * @name AuthLoginCreate
    * @request POST:/api/auth/login
    */
-  authLoginCreate = (
-    data: AuthenticationLoginRequestPOST,
-    params: RequestParams = {},
-  ) =>
-    this.request<AuthenticationBaseResponsePOST, ErrorResponse | void>({
+  authLoginCreate = (data: LoginRequestPOST, params: RequestParams = {}) =>
+    this.request<AuthenticationBaseResponsePOST, ErrorResponse>({
       path: `/api/auth/login`,
       method: "POST",
       body: data,
@@ -77,6 +73,28 @@ export class Api<
       method: "POST",
       body: data,
       type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags User
+   * @name UserUpdatePartialUpdate
+   * @request PATCH:/api/user/update
+   */
+  userUpdatePartialUpdate = (
+    data: {
+      FullName?: string;
+      AvatarImage?: IFormFile;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<UpdateUserResponse, ErrorResponse>({
+      path: `/api/user/update`,
+      method: "PATCH",
+      body: data,
+      type: ContentType.UrlEncoded,
+      format: "json",
       ...params,
     });
 }

@@ -1,12 +1,12 @@
 enum PATH {
   HOME = "/",
-  LOGIN = "/authentication/login",
-  SIGNUP = "/authentication/sign-up",
-  ONBOARDING = "/authentication/onboarding",
+  LOGIN = "/auth/login",
+  SIGNUP = "/auth/sign-up",
+  ONBOARDING = "/user/onboarding",
 }
 
-export const AUTHENTICATION_PATHS: string[] = [
-  PATH.HOME,
+export const AUTH_ONBOARDING_PATHS: string[] = [
+  PATH.ONBOARDING,
   PATH.LOGIN,
   PATH.SIGNUP,
 ];

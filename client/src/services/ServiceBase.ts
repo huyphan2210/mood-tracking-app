@@ -33,3 +33,44 @@ export const POSTApi = async <TRequest, TResponse>(
 
   return result;
 };
+
+export const PATCHApi = async <TRequest, TResponse>(
+  url: string,
+  payload: TRequest,
+) => {
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const error: ApiError = await response.json();
+    throw new ServiceError(error);
+  }
+
+  const result: TResponse = await response.json();
+
+  return result;
+};
+
+export const PATCHApiWithFormFile = async <TResponse>(
+  url: string,
+  payload: FormData,
+) => {
+  const response = await fetch(url, {
+    method: "PATCH",
+    body: payload,
+  });
+
+  if (!response.ok) {
+    const error: ApiError = await response.json();
+    throw new ServiceError(error);
+  }
+
+  const result: TResponse = await response.json();
+
+  return result;
+};

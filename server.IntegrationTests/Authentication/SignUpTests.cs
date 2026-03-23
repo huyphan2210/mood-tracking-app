@@ -13,7 +13,7 @@ namespace server.IntegrationTests.Authentication
     [Fact]
     public async Task SignUp_ShouldReturnOk_WhenRequestIsValid()
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "test@yopmail.com",
         Password = "Valid@Password123"
@@ -30,7 +30,7 @@ namespace server.IntegrationTests.Authentication
     [Fact]
     public async Task SignUp_ShouldReturnBadRequest_WhenUserIsDuplicated()
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "seed@test.com",
         Password = "Valid@Password123"
@@ -47,7 +47,7 @@ namespace server.IntegrationTests.Authentication
     [Fact]
     public async Task SignUp_ShouldReturnBadRequest_WhenEmailIsInvalid()
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "seed",
         Password = "Valid@Password123"
@@ -69,7 +69,7 @@ namespace server.IntegrationTests.Authentication
     [InlineData("ABCD1@")]
     public async Task SignUp_ShouldReturnBadRequest_WhenPasswordIsInvalid(string invalidPassword)
     {
-      AuthenticationSignUpRequestPOST request = new()
+      SignUpRequestPOST request = new()
       {
         Email = "test@yopmail.com",
         Password = invalidPassword

@@ -14,7 +14,7 @@ namespace server.IntegrationTests.Authentication
     [Fact]
     public async Task Login_ShouldReturnJWTAndStatus_WhenUserExists()
     {
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "seed@test.com",
         Password = "Password123!"
@@ -33,7 +33,7 @@ namespace server.IntegrationTests.Authentication
     [Fact]
     public async Task Login_ShouldReturnUnauthorizedStatus_WhenUserDoesNotExist()
     {
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "seed1@test.com",
         Password = "Password123!"
@@ -52,7 +52,7 @@ namespace server.IntegrationTests.Authentication
     [Fact]
     public async Task Login_ShouldReturnUnauthorizedStatus_WhenPasswordDoesNotMatch()
     {
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "seed@test.com",
         Password = "Password1234!"
@@ -79,9 +79,9 @@ namespace server.IntegrationTests.Authentication
         IsDeleted = true
       };
 
-      await factory.SeedUserAsync(user);
+      await _factory.SeedUserAsync(user);
 
-      AuthenticationLoginRequestPOST request = new()
+      LoginRequestPOST request = new()
       {
         Email = "seed1@test.com",
         Password = "Password123!"

@@ -79,22 +79,30 @@ export interface AuthenticationBaseResponsePOST {
   jwt: string;
 }
 
-export interface AuthenticationLoginRequestPOST {
-  email: string;
-  password: string;
-}
-
-export interface AuthenticationSignUpRequestPOST {
-  email: string;
-  password: string;
-}
-
 export interface ErrorResponse {
   errorCode?: null | string;
   message: string;
 }
 
+/** @format binary */
+export type IFormFile = File;
+
+export interface LoginRequestPOST {
+  email: string;
+  password: string;
+}
+
 export interface SignUpErrorResponse {
   errorCode?: IdentityErrorCode;
   message: string;
+}
+
+export interface SignUpRequestPOST {
+  email: string;
+  password: string;
+}
+
+export interface UpdateUserResponse {
+  status: UserStatus;
+  jwt: string;
 }

@@ -5,8 +5,9 @@ namespace server.Services.AuthenticationServices
 {
     public interface IAuthenticationServices
     {
-        public Task<AuthenticationBaseResponsePOST> LoginAsync(AuthenticationLoginRequestPOST authenticationLogin);
-        public Task<AuthenticationBaseResponsePOST> SignUpAsync(AuthenticationSignUpRequestPOST authenticationSignUp);
+        public Task<AuthenticationBaseResponsePOST> LoginAsync(LoginRequestPOST authenticationLogin);
+        public Task<AuthenticationBaseResponsePOST> SignUpAsync(SignUpRequestPOST authenticationSignUp);
+        public string GenerateJwtToken(User user);
         public Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

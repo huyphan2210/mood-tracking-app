@@ -3,7 +3,7 @@
 import { FC, ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./main.module.scss";
-import { AUTHENTICATION_PATHS } from "@/lib/paths";
+import { AUTH_ONBOARDING_PATHS } from "@/lib/paths";
 
 interface ILayoutMain {
   children: ReactNode;
@@ -16,7 +16,7 @@ const LayoutMain: FC<ILayoutMain> = ({ children }) => {
     <main
       className={`
         ${styles.main} 
-        ${AUTHENTICATION_PATHS.includes(pathname) ? styles["main--authentication"] : ""}
+        ${AUTH_ONBOARDING_PATHS.includes(pathname) ? styles["main--authentication"] : ""}
       `}
     >
       {children}

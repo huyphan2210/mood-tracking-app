@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5281"
+      "url": "http://localhost:5281/"
     }
   ],
   "paths": {
@@ -19,17 +19,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthenticationSignUpRequestPOST"
+                "$ref": "#/components/schemas/SignUpRequestPOST"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthenticationSignUpRequestPOST"
+                "$ref": "#/components/schemas/SignUpRequestPOST"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthenticationSignUpRequestPOST"
+                "$ref": "#/components/schemas/SignUpRequestPOST"
               }
             }
           },
@@ -108,17 +108,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthenticationLoginRequestPOST"
+                "$ref": "#/components/schemas/LoginRequestPOST"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthenticationLoginRequestPOST"
+                "$ref": "#/components/schemas/LoginRequestPOST"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthenticationLoginRequestPOST"
+                "$ref": "#/components/schemas/LoginRequestPOST"
               }
             }
           },
@@ -145,8 +145,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "text/plain": {
                 "schema": {
@@ -166,7 +166,24 @@
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -199,6 +216,113 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/update": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "FullName": {
+                    "type": "string"
+                  },
+                  "AvatarImage": {
+                    "$ref": "#/components/schemas/IFormFile"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -244,36 +368,6 @@
             "$ref": "#/components/schemas/UserStatus"
           },
           "jwt": {
-            "type": "string"
-          }
-        }
-      },
-      "AuthenticationLoginRequestPOST": {
-        "required": [
-          "email",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
-        }
-      },
-      "AuthenticationSignUpRequestPOST": {
-        "required": [
-          "email",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
             "type": "string"
           }
         }
@@ -331,6 +425,25 @@
           "UserNotFound"
         ]
       },
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
+      },
+      "LoginRequestPOST": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
       "MoodName": {
         "enum": [
           "VerySad",
@@ -354,6 +467,21 @@
           }
         }
       },
+      "SignUpRequestPOST": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
       "SleepHours": {
         "enum": [
           "ZeroToTwo",
@@ -362,6 +490,21 @@
           "SevenToEight",
           "NinePlus"
         ]
+      },
+      "UpdateUserResponse": {
+        "required": [
+          "status",
+          "jwt"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/UserStatus"
+          },
+          "jwt": {
+            "type": "string"
+          }
+        }
       },
       "UserStatus": {
         "enum": [
@@ -378,6 +521,9 @@
     },
     {
       "name": "Mood"
+    },
+    {
+      "name": "User"
     }
   ]
 }
