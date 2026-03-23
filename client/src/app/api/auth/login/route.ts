@@ -31,7 +31,8 @@ export const login = ({ authLoginCreate }: Api) =>
 
       const response = await authLoginCreate(payload);
       const userInfo: AuthenticationBaseResponsePOST = await response.json();
-
+      api.setSecurityData(userInfo.jwt);
+      
       const returnedResponse = NextResponse.json(userInfo, { status: 200 });
       returnedResponse.cookies.set("jwt", userInfo.jwt, {
         httpOnly: true,

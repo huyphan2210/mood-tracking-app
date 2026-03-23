@@ -5,6 +5,7 @@
 jest.mock("../../../../lib/api/Api", () => {
   class ApiMock {
     public authSignUpCreate = jest.fn();
+    public setSecurityData = jest.fn();
 
     constructor() {
       (this.authSignUpCreate as jest.Mock).mockResolvedValue({

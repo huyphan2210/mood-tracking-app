@@ -9,6 +9,7 @@ import { POST } from "./route";
 jest.mock("../../../../lib/api/Api", () => {
   class ApiMock {
     public authLoginCreate = jest.fn();
+    public setSecurityData = jest.fn();
 
     constructor() {
       (this.authLoginCreate as jest.Mock).mockResolvedValue({
