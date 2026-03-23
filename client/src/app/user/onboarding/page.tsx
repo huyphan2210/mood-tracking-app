@@ -1,15 +1,18 @@
 "use client";
 
 import { FC, useState } from "react";
-import AuthenticationForm from "@/components/authentication/authentication-form";
-import AuthenticationCta from "@/components/authentication/authentication-cta/authentication-cta";
-import HomeNavigation from "@/components/home-navigation/home-navigation";
 import { useRouter } from "next/navigation";
-import PATH from "@/lib/paths";
-import { UserStatus } from "@/lib/api/data-contracts";
-import { login } from "@/services/authentication/AuthenticationService";
-import { ServiceError, BadServiceRequest } from "@/services/ServiceBase";
+
+import AuthenticationForm from "@/components/authentication/authentication-form";
 import AuthenticationErrorMessage from "@/components/authentication/authentication-error-message/authentication-error-message";
+import HomeNavigation from "@/components/home-navigation/home-navigation";
+
+import PATH from "@/lib/paths";
+import { ServiceError, BadServiceRequest } from "@/services/ServiceBase";
+import { updateUser } from "@/services/user/UserServices";
+import styles from "./page.module.scss";
+import PrimaryButton from "@/components/primary-button/primary-button";
+import UpdateUserFields from "@/components/user/update-user-fields/update-user-fields";
 
 const OnBoarding: FC = () => {
   const updateUserFormId = "update-user-form";
@@ -24,12 +27,8 @@ const OnBoarding: FC = () => {
   const submitHandler = async (formData: FormData) => {
     try {
       setIsLoading(true);
-      const result = await login(formData);
-      if (result.status === UserStatus.NoFullName) {
-        router.push(PATH.ONBOARDING);
-      } else {
-        router.push(PATH.HOME);
-      }
+      await updateUser(formData);
+      router.push(PATH.HOME);
     } catch (error) {
       if (error instanceof ServiceError || error instanceof BadServiceRequest) {
         setErrorMessage(error.message);
@@ -50,16 +49,18 @@ const OnBoarding: FC = () => {
           "aria-errormessage": `${errorMessage ? updateUserFormId + "_err" : undefined}`,
         }}
       >
+        <UpdateUserFields type="onboarding" />
         {errorMessage && (
           <AuthenticationErrorMessage
             errorMessage={errorMessage}
             attributes={{ id: `${updateUserFormId}_err` }}
           />
         )}
-        <AuthenticationCta
+        <PrimaryButton
+          content={"Start Tracking"}
           isLoading={isLoading}
-          ctaContent="Start Tracking"
-        ></AuthenticationCta>
+          type="submit"
+        />
       </AuthenticationForm>
     </>
   );
