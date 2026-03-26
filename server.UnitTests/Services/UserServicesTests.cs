@@ -8,6 +8,7 @@ using server.Domain.Entities;
 using server.Domain.Enums.User;
 using server.DTOs.User;
 using server.Exceptions;
+using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
 using server.Services.UserServices;
 using server.UnitTests.Utilities;
@@ -18,6 +19,7 @@ namespace server.UnitTests.Services
   {
     private readonly Mock<UserManager<User>> _userManagerMock = CreateUserManagerMock.CreateMockUserManager();
     private readonly Mock<IAuthenticationServices> _authenticationServicesMock = new();
+    private readonly Mock<IUserRepository> _userRepositoryMock = new();
     private readonly Mock<IStorageClient> _storageClientMock = new();
     private readonly Mock<ILogger<UserServices>> _loggerMock = new();
     private readonly UserServices _userServices;
@@ -41,6 +43,7 @@ namespace server.UnitTests.Services
       _userServices = new(
         _userManagerMock.Object,
         _authenticationServicesMock.Object,
+        _userRepositoryMock.Object,
         _storageClientMock.Object,
         _loggerMock.Object
       );
@@ -51,8 +54,8 @@ namespace server.UnitTests.Services
     {
       var request = new UpdateUserRequestPATCH();
 
-      _authenticationServicesMock.Setup(
-        services => services.FindUserByIdAsync(It.IsAny<Guid>())
+      _userRepositoryMock.Setup(
+        services => services.GetUserByIdAsync(It.IsAny<Guid>(), default)
       ).ThrowsAsync(
         new NotFoundException(IdentityErrorCode.UserNotFound.ToString(), "No User is Found")
       );
@@ -75,8 +78,8 @@ namespace server.UnitTests.Services
         FullName = "New Name"
       };
 
-      _authenticationServicesMock.Setup(
-        services => services.FindUserByIdAsync(It.IsAny<Guid>())
+      _userRepositoryMock.Setup(
+        services => services.GetUserByIdAsync(It.IsAny<Guid>(), default)
       ).ReturnsAsync(user);
 
       await _userServices.UpdateUserAsync(Guid.NewGuid(), request);
@@ -99,8 +102,8 @@ namespace server.UnitTests.Services
         AvatarImage = CreateMockFormFile("avatar.jpg", 250)
       };
 
-      _authenticationServicesMock.Setup(
-        services => services.FindUserByIdAsync(It.IsAny<Guid>())
+      _userRepositoryMock.Setup(
+        services => services.GetUserByIdAsync(It.IsAny<Guid>(), default)
       ).ReturnsAsync(user);
 
       _storageClientMock.Setup(client => client.UploadImageAsync(request.AvatarImage)).ReturnsAsync(new ImageUploadResult
