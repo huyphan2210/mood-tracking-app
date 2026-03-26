@@ -5,24 +5,42 @@ using server.Domain.Enums.User;
 using server.DTOs.User;
 using server.Exceptions;
 using server.Services.AuthenticationServices;
+using server.Repositories.UserRepository;
 
 namespace server.Services.UserServices
 {
   public class UserServices(
     UserManager<User> userManager,
     IAuthenticationServices authenticationServices,
+    IUserRepository userRepository,
     IStorageClient storageClient,
     ILogger<IUserSevices> logger
   ) : IUserSevices
   {
     private readonly UserManager<User> _userManager = userManager;
     private readonly IAuthenticationServices _authenticationServices = authenticationServices;
+    private readonly IUserRepository _userRepository = userRepository;
     private readonly IStorageClient _storageClient = storageClient;
     private readonly ILogger<IUserSevices> _logger = logger;
 
+    public async Task<UserResponse> GetUserByIdAsync(Guid userId, CancellationToken cancellationToken)
+    {
+      var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken)
+        ?? throw new NotFoundException(IdentityErrorCode.UserNotFound.ToString(), $"Cannot find a user with id ${userId}");
+
+      return new()
+      {
+        FullName = user.FullName!,
+        Email = user.Email!,
+        AvatarURL = user.AvatarURL
+      };
+    }
+
     public async Task<UpdateUserResponse> UpdateUserAsync(Guid userId, UpdateUserRequestPATCH request)
     {
-      var user = await _authenticationServices.FindUserByIdAsync(userId);
+      var user = await _userRepository.GetUserByIdAsync(userId, default)
+        ?? throw new NotFoundException(IdentityErrorCode.UserNotFound.ToString(), $"Cannot find a user with id ${userId}");
+
       if (request.AvatarImage is not null)
       {
         var uploadImageResult = await _storageClient.UploadImageAsync(request.AvatarImage);
