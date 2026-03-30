@@ -3,7 +3,12 @@ import {
   LoginRequestPOST,
   SignUpRequestPOST,
 } from "@/lib/api/data-contracts";
-import { BadServiceRequest, POSTApi, ServiceError } from "../ServiceBase";
+import {
+  BadServiceRequest,
+  GETApi,
+  POSTApi,
+  ServiceError,
+} from "../ServiceBase";
 
 const API_URL = "/api/auth";
 const EMAIL_VALIDATOR = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,6 +57,14 @@ export const login = async (formData: FormData) => {
     }
 
     throw new ServiceError("Login Service is temporarily unavailable");
+  }
+};
+
+export const logout = async () => {
+  try {
+    return await GETApi(`${API_URL}/logout`);
+  } catch (error) {
+    throw new ServiceError("Logout Service is temporarily unavailable");
   }
 };
 

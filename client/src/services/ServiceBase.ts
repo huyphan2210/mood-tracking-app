@@ -12,6 +12,24 @@ export class ServiceError extends Error {
   }
 }
 
+export const GETApi = async <TResponse>(url: string) => {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const error: ApiError = await response.json();
+    throw new ServiceError(error);
+  }
+
+  const result: TResponse = await response.json();
+
+  return result;
+};
+
 export const POSTApi = async <TRequest, TResponse>(
   url: string,
   payload: TRequest,
