@@ -1,12 +1,106 @@
+@use "../../../styles/font-mixins" as font-mixins;
+
 .header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &Profile {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+
+    &Avatar {
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    &Menu {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      right: 0;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: var(--neutral-0);
+      border-radius: 0.5rem;
+      box-shadow: 0 5px 0.5rem 0
+        color-mix(in srgb, var(--neutral-900) 16%, var(--neutral-0) 0%);
+      animation: appear 0.5s ease-in-out;
+
+      &.open {
+        display: block;
+      }
+
+      &Name {
+        @include font-mixins.text-preset-6-medium;
+        display: block;
+        color: var(--neutral-900);
+      }
+
+      &Email {
+        @include font-mixins.text-preset-7;
+        color: var(--neutral-300);
+        display: block;
+        border-bottom: solid 1px var(--blue-100);
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      &Actions {
+        display: grid;
+        gap: 0.75rem;
+
+        &Item {
+          &Btn {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+
+            &Name {
+              @include font-mixins.text-preset-7;
+              color: var(--neutral-900);
+            }
+          }
+        }
+      }
+    }
+
+    @supports (top: anchor(bottom)) {
+      &Menu {
+        top: calc(anchor(bottom) + 0.5rem);
+        left: anchor(right);
+        right: unset;
+        transform: translateX(-100%);
+        width: calc(100% - 2rem);
+      }
+    }
+  }
 }
 
 @media screen and (min-width: 48rem) {
   .header {
+    &Profile {
+      &Menu {
+        width: fit-content;
+        min-width: 12.5rem;
+      }
+    }
   }
 }
 
 @media screen and (min-width: 90rem) {
   .header {
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: translate(-100%, 2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-100%, 0);
   }
 }

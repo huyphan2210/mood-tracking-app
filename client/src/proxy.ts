@@ -11,12 +11,22 @@ interface IJwtPayload extends JwtPayload {
   status: string;
 }
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const jwt = req.cookies.get("jwt")?.value;
+  const visited = req.cookies.get("visited")?.value;
+
   const decodedJwt = jwt ? jwtDecode<IJwtPayload>(jwt) : undefined;
 
   const { pathname } = req.nextUrl;
   const isBypassPath = BYPASS_PATHS.has(pathname);
+
+  if (!decodedJwt && !visited) {
+    if (pathname === PATH.HOME) {
+      return NextResponse.next();
+    }
+
+    return NextResponse.redirect(new URL(PATH.HOME, req.url));
+  }
 
   if (!decodedJwt) {
     if (isBypassPath) {

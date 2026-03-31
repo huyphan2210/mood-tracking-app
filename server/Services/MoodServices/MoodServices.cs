@@ -2,20 +2,23 @@ using System.Text.Json;
 using server.Background.Queue;
 using server.Background.Workers;
 using server.Domain.Entities;
+using server.Domain.Enums.User;
 using server.DTOs.Mood.Requests;
+using server.Exceptions;
 using server.Repositories.MoodRepository;
+using server.Repositories.UserRepository;
 using server.Services.AuthenticationServices;
 
 namespace server.Services.MoodServices
 {
   public partial class MoodServices(
-    IAuthenticationServices authenticationServices,
+    IUserRepository userRepository,
     IMoodRepository moodRepository,
     IBackgroundTaskQueue<MoodAnalysisJob> queue,
     ILogger<MoodServices> logger
   ) : IMoodServices
   {
-    private readonly IAuthenticationServices _authenticationServices = authenticationServices;
+    private readonly IUserRepository _userRepository = userRepository;
     private readonly IMoodRepository _moodRepository = moodRepository;
     private readonly IBackgroundTaskQueue<MoodAnalysisJob> _queue = queue;
     private readonly ILogger _logger = logger;
@@ -25,7 +28,8 @@ namespace server.Services.MoodServices
       Guid userId
     )
     {
-      var user = await _authenticationServices.FindUserByIdAsync(userId);
+      var user = await _userRepository.GetUserByIdAsync(userId, default)
+        ?? throw new NotFoundException(IdentityErrorCode.UserNotFound.ToString(), $"Cannot find a user with id ${userId}"); ;
 
       var newMood = new Mood
       {

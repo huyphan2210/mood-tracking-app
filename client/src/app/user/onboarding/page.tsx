@@ -49,7 +49,7 @@ const OnBoarding: FC = () => {
           "aria-errormessage": `${errorMessage ? updateUserFormId + "_err" : undefined}`,
         }}
       >
-        <UpdateUserFields type="onboarding" />
+        <UpdateUserFields />
         {errorMessage && (
           <AuthenticationErrorMessage
             errorMessage={errorMessage}

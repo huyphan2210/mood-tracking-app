@@ -108,17 +108,9 @@ namespace server.Services.AuthenticationServices
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(24),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public async Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == id && user.IsDeleted == false, cancellationToken)
-                ?? throw new NotFoundException(IdentityErrorCode.UserNotFound.ToString(), $"Cannot find a user with id ${id}");
-            return user;
         }
     }
 }

@@ -15,6 +15,17 @@ namespace server.Controllers
   {
     private readonly IUserSevices _userServices = userSevices;
 
+    [HttpGet()]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<UserResponse>> GetUser(CancellationToken cancellationToken)
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+      var result = await _userServices.GetUserByIdAsync(Guid.Parse(userId), cancellationToken);
+      return Ok(result);
+    }
+
     [HttpPatch("update")]
     [ProducesResponseType(typeof(UpdateUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

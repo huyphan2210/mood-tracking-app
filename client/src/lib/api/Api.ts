@@ -19,6 +19,7 @@ import {
   SignUpErrorResponse,
   SignUpRequestPOST,
   UpdateUserResponse,
+  UserResponse,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
@@ -73,6 +74,20 @@ export class Api<
       method: "POST",
       body: data,
       type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags User
+   * @name UserList
+   * @request GET:/api/user
+   */
+  userList = (params: RequestParams = {}) =>
+    this.request<UserResponse, ErrorResponse>({
+      path: `/api/user`,
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**

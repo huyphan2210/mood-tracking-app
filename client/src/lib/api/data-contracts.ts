@@ -106,3 +106,9 @@ export interface UpdateUserResponse {
   status: UserStatus;
   jwt: string;
 }
+
+export interface UserResponse {
+  fullName: string;
+  email: string;
+  avatarURL?: null | string;
+}
