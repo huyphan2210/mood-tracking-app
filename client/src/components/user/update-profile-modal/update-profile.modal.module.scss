@@ -1,0 +1,29 @@
+@use "../../../styles/font-mixins" as font-mixins;
+
+.updateProfileModal {
+  &Heading {
+    @include font-mixins.text-preset-3;
+    color: var(--neutral-900);
+  }
+
+  &Description {
+    @include font-mixins.text-preset-6-regular;
+    color: var(--neutral-600);
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+#updateUserForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media screen and (min-width: 48rem) {
+  .updateProfileModal {
+    &Description {
+      margin-bottom: 2rem;
+    }
+  }
+}
