@@ -7,6 +7,7 @@ interface IPrimaryButtonBase {
   content: string;
   customClass?: string;
   onClickHandler?: () => void;
+  isDisabled?: boolean;
   isLoading?: boolean;
 }
 
@@ -24,6 +25,7 @@ const PrimaryButton: FC<IPrimaryButtonForForm | IPrimaryButton> = ({
   customClass,
   type,
   onClickHandler,
+  isDisabled = false,
   isLoading = false,
 }) => {
   return (
@@ -31,7 +33,7 @@ const PrimaryButton: FC<IPrimaryButtonForForm | IPrimaryButton> = ({
       type={type}
       className={`${styles["primary-btn"]} ${customClass}`}
       onClick={onClickHandler}
-      disabled={isLoading}
+      disabled={isDisabled || isLoading}
     >
       {content}
     </button>

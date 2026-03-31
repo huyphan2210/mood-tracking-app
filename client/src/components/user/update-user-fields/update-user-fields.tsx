@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useRef, useState } from "react";
+import { ChangeEvent, FC, useLayoutEffect, useRef, useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import styles from "./update-user-fields.module.scss";
 
@@ -6,10 +6,11 @@ import invalidIcon from "@/icons/invalid.svg";
 import emptyAvatar from "@/icons/empty-avatar.jpg";
 
 interface IUpdateUserFields {
-  type: "onboarding" | "normal-update";
+  name?: string;
+  avatarUrl?: null | string;
 }
 
-const UpdateUserFields: FC<IUpdateUserFields> = ({ type }) => {
+const UpdateUserFields: FC<IUpdateUserFields> = ({ name, avatarUrl }) => {
   const FULLNAME = "FullName";
   const AVATAR_IMAGE = "AvatarImage";
 
@@ -17,9 +18,10 @@ const UpdateUserFields: FC<IUpdateUserFields> = ({ type }) => {
 
   const [avatarError, setAvatarError] = useState("");
 
+  const [currentName, setCurrentName] = useState(name ?? "");
   const [currentFile, setCurrentFile] = useState<File>();
   const [currentAvatar, setCurrentAvatar] = useState<string | StaticImageData>(
-    emptyAvatar,
+    avatarUrl ?? emptyAvatar,
   );
 
   const setAvatar = (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +70,8 @@ const UpdateUserFields: FC<IUpdateUserFields> = ({ type }) => {
           name={FULLNAME}
           type="text"
           className={styles["update-user-field-set_field-wrapper_input"]}
+          value={currentName}
+          onChange={(e) => setCurrentName(e.target.value)}
         ></input>
       </div>
       <div
