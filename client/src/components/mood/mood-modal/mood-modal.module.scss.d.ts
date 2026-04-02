@@ -1,4 +1,5 @@
 export type Styles = {
+  'moodModal_BackBtn': string;
   'moodModal_Heading': string;
   'moodModal_Progress': string;
   'moodModalForm': string;
