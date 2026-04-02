@@ -21,6 +21,7 @@
 
   &:disabled {
     background-color: var(--blue-200);
+    box-shadow: none;
     cursor: not-allowed;
   }
 }

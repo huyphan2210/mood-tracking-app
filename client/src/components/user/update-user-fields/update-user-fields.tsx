@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useLayoutEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useRef, useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import styles from "./update-user-fields.module.scss";
 
