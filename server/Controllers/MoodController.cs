@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using server.DTOs.Exception;
 using server.DTOs.Mood.Requests;
 using server.Services.MoodServices;
 
@@ -13,7 +14,10 @@ namespace server.Controllers
   {
     private readonly IMoodServices _moodServices = moodServices;
 
-    [HttpPost]
+    [HttpPost()]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AnalyzeMood(
       [FromBody] AnalyzeMoodRequestPOST analyzeMoodRequestPOST
     )
