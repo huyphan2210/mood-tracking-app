@@ -1,0 +1,87 @@
+@use "../../../../styles/font-mixins" as font-mixins;
+
+.feelingStep {
+  &_Heading {
+    @include font-mixins.text-preset-3;
+    color: var(--neutral-900);
+    margin-bottom: 0.375rem;
+  }
+
+  &_Instruction {
+    @include font-mixins.text-preset-6-medium;
+    color: var(--neutral-600);
+  }
+
+  &_List {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+    column-gap: 1rem;
+
+    &_Option {
+      display: inline-block;
+      padding: 0.75rem 1rem;
+      background-color: var(--neutral-0);
+      border-radius: 0.625rem;
+      outline-offset: -0.125rem;
+      outline: solid 0.125rem var(--blue-100);
+      cursor: pointer;
+
+      &_Input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      &:focus-visible {
+        outline-color: var(--blue-200);
+      }
+
+      &.chosen {
+        outline-color: var(--blue-600);
+
+        .feelingStep_List_Option_Label {
+          &::before {
+            content: "✓";
+            background-color: var(--blue-600);
+            outline: none;
+          }
+        }
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+        background-color: var(--neutral-200);
+        outline: none;
+        .feelingStep_List_Option_Label {
+          color: var(--neutral-300);
+          &::before {
+            background-color: var(--neutral-0);
+            outline: none;
+          }
+        }
+      }
+
+      &_Label {
+        @include font-mixins.text-preset-6-regular;
+        color: var(--neutral-900);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+
+        &::before {
+          content: "";
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: var(--neutral-0);
+          width: 1.25rem;
+          height: 1.25rem;
+          border-radius: 0.25rem;
+          outline: solid 1.5px var(--blue-200);
+          outline-offset: -1.5px;
+        }
+      }
+    }
+  }
+}

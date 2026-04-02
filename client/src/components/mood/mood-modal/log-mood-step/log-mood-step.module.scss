@@ -1,0 +1,66 @@
+@use "../../../../styles/font-mixins" as font-mixins;
+
+.moodStep {
+  &_Heading {
+    @include font-mixins.text-preset-3;
+    color: var(--neutral-900);
+  }
+
+  &_List {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    &_Option {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      background-color: var(--neutral-0);
+      border-radius: 0.625rem;
+      border: solid 0.125rem var(--blue-100);
+      cursor: pointer;
+      transition: 0s;
+
+      &_Input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      &:focus-visible {
+        border-color: var(--blue-200);
+        outline: none;
+      }
+
+      &.chosen {
+        border-color: var(--blue-600);
+
+        .moodStep_List_Option_Label {
+          &::before {
+            outline-offset: -0.375rem;
+            outline: solid 0.375rem var(--blue-600);
+          }
+        }
+      }
+
+      &_Label {
+        @include font-mixins.text-preset-5;
+        color: var(--neutral-900);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+
+        &::before {
+          content: "";
+          display: inline-block;
+          width: 18.5px;
+          height: 18.5px;
+          border-radius: 50%;
+          border: solid 1.5px var(--blue-200);
+        }
+      }
+    }
+  }
+}

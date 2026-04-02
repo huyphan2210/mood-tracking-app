@@ -1,0 +1,56 @@
+@use "../../../styles/font-mixins" as font-mixins;
+
+.moodModal {
+  &_Heading {
+    @include font-mixins.text-preset-3;
+    color: var(--neutral-900);
+  }
+
+  &_Progress {
+    --corner: 0.5rem;
+
+    display: block;
+    width: 100%;
+    height: 0.375rem;
+    appearance: none;
+    border-radius: var(--corner);
+    background-color: var(--blue-200);
+
+    &::-webkit-progress-bar {
+      background-color: inherit;
+      border-radius: var(--corner);
+    }
+
+    &::-webkit-progress-value {
+      border-radius: var(--corner);
+      background-color: var(--blue-600);
+    }
+
+    &::-moz-progress-bar {
+      background-color: var(--blue-600);
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}
+
+#moodModalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media screen and (min-width: 48rem) {
+  .moodModal {
+    &_Progress {
+    }
+  }
+
+  #moodModalForm {
+    margin-top: 2rem;
+    gap: 2rem;
+  }
+}

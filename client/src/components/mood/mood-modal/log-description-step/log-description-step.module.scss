@@ -1,0 +1,39 @@
+@use "../../../../styles/font-mixins" as font-mixins;
+
+.descriptionStep {
+  &_Heading {
+    @include font-mixins.text-preset-3;
+    color: var(--neutral-900);
+  }
+
+  &_Textarea {
+    @include font-mixins.text-preset-6-regular;
+    padding: 0.75rem 1rem;
+    border-radius: 0.625rem;
+    outline-offset: -1px;
+    outline: solid 1px var(--neutral-300);
+    resize: none;
+    width: 100%;
+    color: var(--neutral-900);
+    min-height: 9.375rem;
+    transition: 0s;
+
+    &::placeholder {
+      @include font-mixins.text-preset-6-italic;
+      color: var(--neutral-600);
+    }
+
+    &:focus-visible {
+      outline-offset: -0.125rem;
+      outline: solid 0.125rem var(--blue-600);
+    }
+  }
+
+  &_CharacterCount {
+    @include font-mixins.text-preset-8;
+    display: block;
+    text-align: right;
+    color: var(--neutral-600);
+    margin-top: 0.5rem;
+  }
+}
