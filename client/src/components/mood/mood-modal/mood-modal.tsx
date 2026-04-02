@@ -76,6 +76,7 @@ const MoodModal: FC<IMoodModal> = ({ onClose, isOpen = false }) => {
     0: !formData.mood,
     1: formData.feelings.length === 0,
     2: !formData.moodDescription,
+    3: !formData.sleepHours,
   };
 
   return (
@@ -115,7 +116,12 @@ const MoodModal: FC<IMoodModal> = ({ onClose, isOpen = false }) => {
           />
         )}
         {currentStep === steps.length - 1 && (
-          <PrimaryButton content="Submit" type="submit" isLoading={isLoading} />
+          <PrimaryButton
+            content="Submit"
+            type="submit"
+            isLoading={isLoading}
+            isDisabled={isContinueDisabled[currentStep]}
+          />
         )}
       </form>
     </Modal>
