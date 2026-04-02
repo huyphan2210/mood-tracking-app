@@ -6,6 +6,22 @@
     color: var(--neutral-900);
   }
 
+  &_BackBtn {
+    @include font-mixins.text-preset-5;
+    background-color: var(--neutral-0);
+    border-radius: 0.625rem;
+    color: var(--neutral-200);
+    width: 100%;
+    padding-block: 0.75rem;
+    padding-inline: 2rem;
+    margin-bottom: 0.5rem;
+
+    &:hover {
+      background-color: var(--neutral-200);
+      color: var(--neutral-0);
+    }
+  }
+
   &_Progress {
     --corner: 0.5rem;
 

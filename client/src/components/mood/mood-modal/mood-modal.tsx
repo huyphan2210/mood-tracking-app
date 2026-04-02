@@ -2,17 +2,21 @@ import { FC, useState, SubmitEventHandler } from "react";
 import styles from "./mood-modal.module.scss";
 
 import Modal from "@/components/modal/modal";
+import PrimaryButton from "@/components/primary-button/primary-button";
+import AuthenticationErrorMessage from "@/components/authentication/authentication-error-message/authentication-error-message";
+
 import LogMoodStep from "./log-mood-step/log-mood-step";
 import LogFeelingStep from "./log-feeling-step/log-feeling-step";
 import LogDescriptionStep from "./log-description-step/log-description-step";
 import LogSleepHoursStep from "./log-sleep-hours-step/log-sleep-hours-step";
 
 import { ServiceError, BadServiceRequest } from "@/services/ServiceBase";
-import PrimaryButton from "@/components/primary-button/primary-button";
 
 import { AnalyzeMoodRequestPOST } from "@/lib/api/data-contracts";
 import { createMood } from "@/services/mood/MoodServices";
-import AuthenticationErrorMessage from "@/components/authentication/authentication-error-message/authentication-error-message";
+
+import backSvg from "@/icons/back.svg";
+import Image from "next/image";
 
 interface IMoodModal {
   isOpen?: boolean;
@@ -86,7 +90,6 @@ const MoodModal: FC<IMoodModal> = ({ onClose, isOpen = false }) => {
       modalAttributes={{ "aria-label": "Log Mood Modal" }}
     >
       <h2 className={styles.moodModal_Heading}>{heading}</h2>
-
       <form
         id={styles.moodModalForm}
         onSubmit={submitHandler}
@@ -107,22 +110,33 @@ const MoodModal: FC<IMoodModal> = ({ onClose, isOpen = false }) => {
             attributes={{ id: `${styles.moodModalForm}_err` }}
           />
         )}
-        {currentStep < steps.length - 1 && (
-          <PrimaryButton
-            content="Continue"
-            type="button"
-            onClickHandler={() => setCurrentStep((prev) => prev + 1)}
-            isDisabled={isContinueDisabled[currentStep]}
-          />
-        )}
-        {currentStep === steps.length - 1 && (
-          <PrimaryButton
-            content="Submit"
-            type="submit"
-            isLoading={isLoading}
-            isDisabled={isContinueDisabled[currentStep]}
-          />
-        )}
+        <div>
+          {currentStep > 0 && (
+            <button
+              className={styles.moodModal_BackBtn}
+              type="button"
+              onClick={() => setCurrentStep((prev) => prev - 1)}
+            >
+              Back
+            </button>
+          )}
+          {currentStep < steps.length - 1 && (
+            <PrimaryButton
+              content="Continue"
+              type="button"
+              onClickHandler={() => setCurrentStep((prev) => prev + 1)}
+              isDisabled={isContinueDisabled[currentStep]}
+            />
+          )}
+          {currentStep === steps.length - 1 && (
+            <PrimaryButton
+              content="Submit"
+              type="submit"
+              isLoading={isLoading}
+              isDisabled={isContinueDisabled[currentStep]}
+            />
+          )}
+        </div>
       </form>
     </Modal>
   );

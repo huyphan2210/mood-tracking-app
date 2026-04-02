@@ -54,6 +54,17 @@ button {
   }
 }
 
+a,
+button {
+  &:focus-visible {
+    outline: none;
+    border-radius: 0.5rem;
+    box-shadow:
+      0 0 0 3px var(--neutral-0),
+      0 0 0 5px var(--blue-600);
+  }
+}
+
 @media screen and (min-width: 48rem) {
   body {
     --body-padding-top: 2.5rem;
