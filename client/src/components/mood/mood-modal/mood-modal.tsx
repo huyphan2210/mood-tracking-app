@@ -15,9 +15,6 @@ import { ServiceError, BadServiceRequest } from "@/services/ServiceBase";
 import { AnalyzeMoodRequestPOST } from "@/lib/api/data-contracts";
 import { createMood } from "@/services/mood/MoodServices";
 
-import backSvg from "@/icons/back.svg";
-import Image from "next/image";
-
 interface IMoodModal {
   isOpen?: boolean;
   onClose: () => void;
