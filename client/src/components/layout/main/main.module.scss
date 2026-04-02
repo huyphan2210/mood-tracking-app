@@ -2,19 +2,24 @@
 @use "../../../styles/layout-mixins" as layout-mixins;
 
 .main {
-  padding-inline: 1rem;
+  display: block;
+  padding-block: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   &--authentication {
-    padding-block: 5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    padding-block: calc(5rem - var(--body-padding-top)) 5rem;
+    min-height: calc(
+      100vh - var(--body-padding-top) - var(--body-padding-bottom)
+    );
     position: relative;
   }
 }
 
 @media screen and (min-width: 48rem) {
   .main {
+    padding-block: 4rem 0;
   }
 }
 

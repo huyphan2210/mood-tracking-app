@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { internalError, api, getJwt } from "../../api.base";
 import { cookies } from "next/headers";
 
-export const getUser = ({ userList }: Api) =>
+export const getUser = () =>
   async function GET(req: NextRequest) {
     try {
       const appCookies = await cookies();
@@ -19,11 +19,13 @@ export const getUser = ({ userList }: Api) =>
       if (isFirstTimeVisit) {
         guestJwt = await loginWithGuestCredentials();
         api.setSecurityData(guestJwt);
+      } else if (jwt) {
+        api.setSecurityData(jwt);
       } else if (!jwt) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      const response = await userList({
+      const response = await api.userList({
         secure: true,
       });
 
@@ -50,7 +52,7 @@ export const getUser = ({ userList }: Api) =>
     }
   };
 
-export const GET = getUser(api);
+export const GET = getUser();
 
 const loginWithGuestCredentials = async () => {
   const { authLoginCreate } = api;

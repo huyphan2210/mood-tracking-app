@@ -1,11 +1,10 @@
-import { Api } from "@/lib/api/Api";
 import { UpdateUserResponse } from "@/lib/api/data-contracts";
 import { NextRequest, NextResponse } from "next/server";
 import { badRequest, internalError, api, getJwt } from "../../api.base";
 import { IUpdateUserRequestPATCH } from "@/lib/user/intefaces";
 import { ContentType } from "@/lib/api/http-client";
 
-export const updateUser = ({ userUpdatePartialUpdate }: Api) =>
+export const updateUser = () =>
   async function PATCH(req: NextRequest) {
     try {
       if (!(await getJwt())) {
@@ -18,7 +17,7 @@ export const updateUser = ({ userUpdatePartialUpdate }: Api) =>
         return badRequest("No Name nor Avatar provided");
       }
 
-      const response = await userUpdatePartialUpdate(payload, {
+      const response = await api.userUpdatePartialUpdate(payload, {
         type: ContentType.FormData,
         secure: true,
       });
@@ -45,7 +44,7 @@ export const updateUser = ({ userUpdatePartialUpdate }: Api) =>
     }
   };
 
-export const PATCH = updateUser(api);
+export const PATCH = updateUser();
 
 const getPayloadFromFormData = (formData: FormData) => {
   const payload: IUpdateUserRequestPATCH = {

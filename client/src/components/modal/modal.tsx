@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, ReactNode, useLayoutEffect, useRef } from "react";
+import { FC, HTMLAttributes, ReactNode, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "./modal.module.scss";
 
@@ -10,9 +10,15 @@ export interface IModal {
   isOpen?: boolean;
   children: ReactNode;
   onClose: () => void;
+  modalAttributes?: HTMLAttributes<HTMLDialogElement>;
 }
 
-const Modal: FC<IModal> = ({ children, onClose, isOpen = false }) => {
+const Modal: FC<IModal> = ({
+  children,
+  onClose,
+  isOpen = false,
+  modalAttributes,
+}) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useLayoutEffect(() => {
@@ -29,7 +35,7 @@ const Modal: FC<IModal> = ({ children, onClose, isOpen = false }) => {
   }, [isOpen, onClose]);
 
   return (
-    <dialog className={styles.modal} ref={dialogRef}>
+    <dialog className={styles.modal} ref={dialogRef} {...modalAttributes}>
       <button className={styles.closeBtn} type="button" onClick={onClose}>
         <Image src={closeButton} alt="Close Button" width={15} height={15} />
       </button>
