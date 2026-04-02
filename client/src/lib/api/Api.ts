@@ -69,7 +69,7 @@ export class Api<
    * @request POST:/api/mood
    */
   moodCreate = (data: AnalyzeMoodRequestPOST, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<void, ErrorResponse>({
       path: `/api/mood`,
       method: "POST",
       body: data,
