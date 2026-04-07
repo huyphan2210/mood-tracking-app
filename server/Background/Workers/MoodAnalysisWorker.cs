@@ -46,6 +46,7 @@ namespace server.Background.Workers
 
         mood.LlmAdvice = response?.Advice;
         mood.LlmAnalysis = response?.Analysis;
+        mood.LlmMotto = response?.Motto;
 
         await moodRepository.UpdateMoodAsync(mood, stoppingToken);
       }

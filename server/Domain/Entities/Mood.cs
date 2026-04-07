@@ -10,6 +10,7 @@ namespace server.Domain.Entities
     public required string MoodDescription { get; set; }
     public string? LlmAdvice { get; set; }
     public string? LlmAnalysis { get; set; }
+    public string? LlmMotto { get; set; }
     public Guid UserId { get; set; }
     public User User { get; set; } = default!;
   }
