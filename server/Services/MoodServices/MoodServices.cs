@@ -49,23 +49,31 @@ namespace server.Services.MoodServices
     {
       var moodList = await GetMoodListSortByDateDescAsync(startDate, endDate, userId);
 
-      var averageSleepValue = moodList.Average(mood => (int)mood.SleepHours);
-      var avgSleep = (SleepHours)Math.Round(averageSleepValue);
-
-      var averageMoodValue = moodList.Average(mood => (int)mood.MoodName);
-      var avgMood = (MoodName)Math.Round(averageMoodValue);
-
-      return new MoodTrends
+      var moodTrends = new MoodTrends
       {
         MoodList = moodList,
-        AverageMood = avgMood,
-        AverageSleepHours = avgSleep
       };
+
+      if (moodList.ToList().Count > 0)
+      {
+        var averageSleepValue = moodList.Average(mood => (int)mood.SleepHours);
+        var averageMoodValue = moodList.Average(mood => (int)mood.MoodName);
+
+        moodTrends.AverageSleepHours = (SleepHours)Math.Round(averageSleepValue);
+        moodTrends.AverageMood = (MoodName)Math.Round(averageMoodValue);
+      }
+
+      return moodTrends;
     }
 
     private async Task<IEnumerable<MoodResponse>> GetMoodListSortByDateDescAsync(DateTime startDate, DateTime endDate, Guid userId)
     {
       var userMoods = await _moodRepository.GetMoodsByUserIdAsync(userId);
+      if (userMoods.Count == 0)
+      {
+        return [];
+      }
+
       var selectedMoods = userMoods
         .Where(mood => mood.CreatedAt >= startDate && mood.CreatedAt <= endDate)
         .OrderByDescending(mood => mood.CreatedAt);
