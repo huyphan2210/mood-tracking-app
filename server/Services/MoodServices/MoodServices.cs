@@ -39,9 +39,10 @@ namespace server.Services.MoodServices
       {
         MoodName = mood.MoodName,
         SleepHours = mood.SleepHours,
+        Feelings = mood.Feelings,
         Analysis = mood.LlmAnalysis,
         Advice = mood.LlmAdvice,
-        Motto = mood.LlmMotto
+        Motto = mood.LlmMotto,
       };
     }
 
@@ -53,15 +54,6 @@ namespace server.Services.MoodServices
       {
         MoodList = moodList,
       };
-
-      if (moodList.ToList().Count > 0)
-      {
-        var averageSleepValue = moodList.Average(mood => (int)mood.SleepHours);
-        var averageMoodValue = moodList.Average(mood => (int)mood.MoodName);
-
-        moodTrends.AverageSleepHours = (SleepHours)Math.Round(averageSleepValue);
-        moodTrends.AverageMood = (MoodName)Math.Round(averageMoodValue);
-      }
 
       return moodTrends;
     }
@@ -83,6 +75,7 @@ namespace server.Services.MoodServices
         MoodName = mood.MoodName,
         SleepHours = mood.SleepHours,
         Analysis = mood.LlmAnalysis,
+        Feelings = mood.Feelings,
         Advice = mood.LlmAdvice,
         Motto = mood.LlmMotto,
         Date = mood.CreatedAt
