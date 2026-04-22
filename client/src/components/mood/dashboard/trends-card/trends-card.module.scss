@@ -1,0 +1,110 @@
+@use "../../../../styles/font-mixins" as font-mixins;
+
+.trendsCard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.5rem;
+  min-height: 29.8rem;
+  position: relative;
+
+  &_Heading {
+    @include font-mixins.text-preset-3;
+    max-width: 18.75rem;
+    width: 60%;
+  }
+
+  &_MonthPicker {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  &_Chart {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    overflow: hidden;
+
+    &_Yaxis {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      flex-shrink: 0;
+      flex-grow: 1;
+
+      &_Item {
+        @include font-mixins.text-preset-9;
+        color: var(--neutral-600);
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+
+        &::after {
+          content: "";
+          flex: 1;
+          height: 1px;
+          background-color: var(--blue-100);
+          align-self: start;
+          margin-left: 0.625rem;
+        }
+
+        &:last-child {
+          opacity: 0;
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+
+    &_Xaxis {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      gap: 1rem;
+      width: calc(100% - 5rem);
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scrollbar-gutter: stable;
+      justify-self: end;
+      padding-bottom: 0.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--blue-200) transparent;
+
+      &::-webkit-scrollbar {
+        height: 0.25rem;
+
+        &-thumb {
+          background: var(--blue-200);
+          border-radius: 999px;
+
+          &:hover {
+            cursor: pointer;
+            background: var(--blue-300);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 48rem) {
+  .trendsCard {
+    min-height: 30.4rem;
+    &_Heading {
+      max-width: 20.75rem;
+    }
+  }
+}
+
+@media screen and (min-width: 85.5rem) {
+  .trendsCard {
+    padding: 2rem;
+    min-height: 31.3rem;
+  }
+}

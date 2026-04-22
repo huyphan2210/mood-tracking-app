@@ -3,6 +3,7 @@ import { FC } from "react";
 import { AnalyzeMoodRequestPOST, SleepHours } from "@/lib/api/data-contracts";
 
 import styles from "./log-sleep-hours.step.module.scss";
+import { sleepOptions } from "@/lib/mood/records";
 
 interface ILogSleepHoursStep {
   formData: AnalyzeMoodRequestPOST;
@@ -14,13 +15,6 @@ const LogSleepHoursStep: FC<ILogSleepHoursStep> = ({
   setFormData,
 }) => {
   const heading = "How many hours did you sleep last night?";
-  const sleepOptions = [
-    { value: SleepHours.NinePlus, label: "9+ hours" },
-    { value: SleepHours.SevenToEight, label: "7-8 hours" },
-    { value: SleepHours.FiveToSix, label: "5-6 hours" },
-    { value: SleepHours.ThreeToFour, label: "3-4 hours" },
-    { value: SleepHours.ZeroToTwo, label: "0-2 hours" },
-  ];
   return (
     <>
       <h3 className={styles.sleepHoursStep_Heading}>{heading}</h3>

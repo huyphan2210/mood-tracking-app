@@ -1,0 +1,73 @@
+@use "../../styles/font-mixins" as font-mixins;
+
+.monthPicker {
+  &_btn {
+    @include font-mixins.text-preset-7;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    background-color: var(--blue-100);
+    border-radius: 1rem;
+    color: var(--blue-600);
+
+    &:hover,
+    &:focus {
+      background-color: var(--blue-200);
+    }
+  }
+
+  &_popover {
+    display: none;
+    &:popover-open {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 1rem;
+      background-color: var(--neutral-0);
+      padding: 0.75rem;
+      border-radius: 1rem;
+      box-shadow: 0 5px 0.5rem 0
+        color-mix(in srgb, var(--neutral-900) 16%, var(--neutral-0) 0%);
+    }
+
+    @supports (top: anchor(bottom)) {
+      top: calc(anchor(bottom) + 0.75rem);
+      left: anchor(right);
+      transform: translateX(-100%);
+    }
+
+    &_list {
+      padding-left: 1rem;
+      border-left: solid 1px var(--neutral-200);
+
+      &:first-child {
+        padding-left: 0;
+        border-left: none;
+      }
+
+      &_item {
+        margin-bottom: 0.75rem;
+
+        button {
+          @include font-mixins.text-preset-7;
+          width: 100%;
+          text-align: left;
+          color: var(--neutral-900);
+
+          &:disabled {
+            color: var(--neutral-200) !important;
+            cursor: not-allowed !important;
+          }
+
+          &:hover,
+          &:focus {
+            color: var(--blue-600);
+          }
+
+          &.chosen {
+            color: var(--blue-600);
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}

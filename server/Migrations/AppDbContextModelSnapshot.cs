@@ -212,6 +212,10 @@ namespace server.Migrations
                         .HasColumnType("text")
                         .HasColumnName("llm_analysis");
 
+                    b.Property<string>("LlmMotto")
+                        .HasColumnType("text")
+                        .HasColumnName("llm_motto");
+
                     b.Property<string>("MoodDescription")
                         .IsRequired()
                         .HasColumnType("text")

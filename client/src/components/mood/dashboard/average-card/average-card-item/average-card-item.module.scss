@@ -1,0 +1,103 @@
+@use "../../../../../styles/font-mixins" as font-mixins;
+
+$colors: (
+  "red": var(--red-300),
+  "indigo": var(--indigo-200),
+  "light-blue": var(--blue-300),
+  "blue": var(--blue-600),
+  "green": var(--green-300),
+  "amber": var(--amber-300),
+);
+
+@mixin card-content-color($name, $value) {
+  &.bg-#{$name} {
+    background-color: $value;
+  }
+}
+
+.averageCard {
+  &_Item {
+    &_Heading {
+      @include font-mixins.text-preset-5;
+      color: var(--neutral-900);
+      margin-bottom: 0.75rem;
+      span {
+        @include font-mixins.text-preset-7;
+        color: var(--neutral-600);
+      }
+    }
+
+    &_Content {
+      @each $name, $value in $colors {
+        @include card-content-color($name, $value);
+      }
+
+      border-radius: 1rem;
+      background-color: var(--blue-100);
+      padding: 1.25rem 61px 1.25rem 1rem;
+      color: var(--neutral-900);
+      min-height: 9.375rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        width: 221px;
+        height: 221px;
+        background-color: var(--neutral-0);
+        opacity: 20%;
+        border-radius: 50%;
+      }
+
+      &::before {
+        top: -2.375rem;
+        right: -10rem;
+      }
+
+      &::after {
+        top: -7px;
+        right: -10.75rem;
+      }
+
+      &.textWhite {
+        color: var(--neutral-0);
+      }
+
+      &_Title {
+        @include font-mixins.text-preset-4;
+        color: inherit;
+        margin-bottom: 0.75rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      &_Description {
+        @include font-mixins.text-preset-7;
+        color: inherit;
+        opacity: 70%;
+        display: flex;
+        gap: 0.5rem;
+
+        &.fullOpacity {
+          opacity: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 48rem) {
+  .averageCard {
+    &_Item {
+      &_Content {
+        padding-left: 1.25rem;
+      }
+    }
+  }
+}

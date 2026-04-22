@@ -1,0 +1,31 @@
+@use "../../../../styles/font-mixins" as font-mixins;
+@use "../../../../styles/animation-mixins" as animation-mixins;
+
+.sleepCard {
+  border-radius: 1rem;
+  background-color: var(--neutral-0);
+  padding: 1.25rem;
+
+  &_heading {
+    @include font-mixins.text-preset-6-medium;
+    color: var(--neutral-600);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  &_info {
+    @include font-mixins.text-preset-3;
+    color: var(--neutral-900);
+  }
+
+  &.isLoading {
+    .sleepCard_info {
+      @include animation-mixins.is-loading-animation;
+      display: block;
+      height: 3rem;
+      width: 100%;
+    }
+  }
+}

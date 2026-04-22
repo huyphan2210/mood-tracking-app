@@ -14,6 +14,14 @@ namespace server.Repositories.MoodRepository
 
       return mood;
     }
+
+    public async Task<List<Mood>> GetMoodsByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+      var moods = await _context.Moods.Where(mood => mood.UserId == userId && mood.IsDeleted == false).ToListAsync(cancellationToken);
+
+      return moods;
+    }
+
     public async Task<Mood> CreateMoodAsync(Mood mood, CancellationToken cancellationToken = default)
     {
       await _context.Moods.AddAsync(mood, cancellationToken);

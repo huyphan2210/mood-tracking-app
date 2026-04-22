@@ -1,0 +1,41 @@
+@use "../../../../styles/font-mixins" as font-mixins;
+@use "../../../../styles/animation-mixins" as animation-mixins;
+
+.reflectionCard {
+  border-radius: 1rem;
+  background-color: var(--neutral-0);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &_heading {
+    @include font-mixins.text-preset-6-medium;
+    color: var(--neutral-600);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &_analysis {
+    @include font-mixins.text-preset-6-medium;
+    color: var(--neutral-900);
+  }
+
+  &_feelings {
+    display: flex;
+    gap: 0.75rem;
+
+    &_item {
+      @include font-mixins.text-preset-6-italic;
+      color: var(--neutral-600);
+    }
+  }
+
+  &.isLoading {
+    .reflectionCard_analysis {
+      @include animation-mixins.is-loading-animation;
+      min-height: 8rem;
+    }
+  }
+}

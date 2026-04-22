@@ -1,4 +1,5 @@
 export type Styles = {
+  'fullHeight': string;
   'logMoodBtn': string;
   'moodDashboard': string;
   'moodDashboard_Average': string;

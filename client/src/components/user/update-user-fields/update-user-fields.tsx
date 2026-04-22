@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, useRef, useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import styles from "./update-user-fields.module.scss";
 
@@ -54,6 +55,16 @@ const UpdateUserFields: FC<IUpdateUserFields> = ({ name, avatarUrl }) => {
     }
   };
 
+  useEffect(() => {
+    if (name) {
+      setCurrentName(name);
+    }
+
+    if (avatarUrl) {
+      setCurrentAvatar(avatarUrl);
+    }
+  }, [name, avatarUrl]);
+
   return (
     <fieldset className={styles["update-user-field-set"]}>
       <div className={styles["update-user-field-set_field-wrapper"]}>
@@ -105,7 +116,7 @@ const UpdateUserFields: FC<IUpdateUserFields> = ({ name, avatarUrl }) => {
             Upload
           </button>
           <input
-            required
+            required={!avatarUrl}
             id={AVATAR_IMAGE}
             name={AVATAR_IMAGE}
             ref={fileRef}

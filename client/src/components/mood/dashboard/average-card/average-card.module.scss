@@ -1,0 +1,12 @@
+@use "../../../../styles/font-mixins" as font-mixins;
+
+.averageCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media screen and (min-width: 48rem) {
+  .averageCard {
+  }
+}

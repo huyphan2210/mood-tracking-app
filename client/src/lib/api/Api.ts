@@ -16,6 +16,8 @@ import {
   ErrorResponse,
   IFormFile,
   LoginRequestPOST,
+  MoodResponse,
+  MoodTrends,
   SignUpErrorResponse,
   SignUpRequestPOST,
   UpdateUserResponse,
@@ -65,6 +67,29 @@ export class Api<
    * No description
    *
    * @tags Mood
+   * @name MoodList
+   * @request GET:/api/mood
+   */
+  moodList = (
+    query?: {
+      /** @format date-time */
+      startDate?: string;
+      /** @format date-time */
+      endDate?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MoodResponse, ErrorResponse>({
+      path: `/api/mood`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Mood
    * @name MoodCreate
    * @request POST:/api/mood
    */
@@ -74,6 +99,29 @@ export class Api<
       method: "POST",
       body: data,
       type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Mood
+   * @name MoodTrendsList
+   * @request GET:/api/mood/trends
+   */
+  moodTrendsList = (
+    query?: {
+      /** @format date-time */
+      startDate?: string;
+      /** @format date-time */
+      endDate?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MoodTrends, ErrorResponse>({
+      path: `/api/mood/trends`,
+      method: "GET",
+      query: query,
+      format: "json",
       ...params,
     });
   /**
