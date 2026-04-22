@@ -19,7 +19,7 @@ export const moodRecords: Record<
     label: string;
     icon: any;
     iconWhite: any;
-    color: "red" | "indigo" | "light-blue" | "green" | "amber";
+    color: "red" | "indigo" | "light-blue" | "green" | "amber" | "blue";
     numValue: number;
   }
 > = {

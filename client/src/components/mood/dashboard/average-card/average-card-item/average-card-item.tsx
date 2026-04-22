@@ -4,7 +4,7 @@ import styles from "./average-card-item.module.scss";
 interface IAverageCardMoodItem {
   heading: string;
   subHeading: string;
-  cardColor?: "red" | "indigo" | "light-blue" | "green" | "amber";
+  cardColor?: "red" | "indigo" | "light-blue" | "green" | "amber" | "blue";
   type: "mood";
   cardTitle: string;
   cardTitlePrefix?: JSX.Element;
@@ -12,11 +12,7 @@ interface IAverageCardMoodItem {
   cardDescriptionPrefix?: JSX.Element;
 }
 
-interface IAverageCardSleepItem extends Omit<
-  IAverageCardMoodItem,
-  "type" | "cardColor"
-> {
-  cardColor?: "blue";
+interface IAverageCardSleepItem extends Omit<IAverageCardMoodItem, "type"> {
   type: "sleep";
 }
 
