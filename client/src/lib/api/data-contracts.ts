@@ -92,6 +92,21 @@ export interface LoginRequestPOST {
   password: string;
 }
 
+export interface MoodResponse {
+  moodName?: MoodName;
+  sleepHours?: SleepHours;
+  feelings?: Feeling[];
+  analysis?: null | string;
+  advice?: null | string;
+  motto?: null | string;
+  /** @format date-time */
+  date?: string;
+}
+
+export interface MoodTrends {
+  moodList: MoodResponse[];
+}
+
 export interface SignUpErrorResponse {
   errorCode?: IdentityErrorCode;
   message: string;

@@ -35,7 +35,7 @@ export const unauthorizedRequest = (message: string) =>
   );
 
 export const internalError = (
-  message = "Authentication Service is unavailable",
+  message = "Service is unavailable",
 ) =>
   NextResponse.json<ApiError>(
     {
