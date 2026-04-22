@@ -1,6 +1,5 @@
 export type Styles = {
   'chosen': string;
-  'moodStep_List_Option_Label': string;
   'sleepHoursStep_Heading': string;
   'sleepHoursStep_List': string;
   'sleepHoursStep_List_Option': string;

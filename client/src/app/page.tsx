@@ -32,7 +32,7 @@ const Home: FC = () => {
           {formatToday()}
         </time>
       </section>
-      <MoodDashboard />
+      {userInfo && <MoodDashboard />}
     </>
   );
 };

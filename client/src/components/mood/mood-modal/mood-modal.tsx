@@ -17,7 +17,7 @@ import { createMood } from "@/services/mood/MoodServices";
 
 interface IMoodModal {
   isOpen?: boolean;
-  onClose: () => void;
+  onClose: (isMoodCreated?: boolean) => Promise<void>;
 }
 
 const MoodModal: FC<IMoodModal> = ({ onClose, isOpen = false }) => {
@@ -40,7 +40,7 @@ const MoodModal: FC<IMoodModal> = ({ onClose, isOpen = false }) => {
     try {
       setIsLoading(true);
       await createMood(formData);
-      onClose();
+      await onClose(true);
     } catch (error) {
       if (error instanceof ServiceError || error instanceof BadServiceRequest) {
         setErrorMessage(error.message);
@@ -83,7 +83,7 @@ const MoodModal: FC<IMoodModal> = ({ onClose, isOpen = false }) => {
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => onClose()}
       modalAttributes={{ "aria-label": "Log Mood Modal" }}
     >
       <h2 className={styles.moodModal_Heading}>{heading}</h2>

@@ -1,15 +1,11 @@
 import { FC } from "react";
 import Image from "next/image";
 
-import { AnalyzeMoodRequestPOST, MoodName } from "@/lib/api/data-contracts";
+import { AnalyzeMoodRequestPOST } from "@/lib/api/data-contracts";
 
 import styles from "./log-mood-step.module.scss";
 
-import moodVeryHappyIcon from "@/icons/mood-very-happy.svg";
-import moodHappyIcon from "@/icons/mood-happy.svg";
-import moodNeutralIcon from "@/icons/mood-neutral.svg";
-import moodSadIcon from "@/icons/mood-sad.svg";
-import moodVerySadIcon from "@/icons/mood-very-sad.svg";
+import { moodOptions } from "@/lib/mood/records";
 
 interface ILogMoodStep {
   formData: AnalyzeMoodRequestPOST;
@@ -18,13 +14,6 @@ interface ILogMoodStep {
 
 const LogMoodStep: FC<ILogMoodStep> = ({ formData, setFormData }) => {
   const heading = "How was your mood today?";
-  const moodOptions = [
-    { value: MoodName.VeryHappy, label: "Very Happy", icon: moodVeryHappyIcon },
-    { value: MoodName.Happy, label: "Happy", icon: moodHappyIcon },
-    { value: MoodName.Neutral, label: "Neutral", icon: moodNeutralIcon },
-    { value: MoodName.Sad, label: "Sad", icon: moodSadIcon },
-    { value: MoodName.VerySad, label: "Very Sad", icon: moodVerySadIcon },
-  ];
 
   return (
     <>
