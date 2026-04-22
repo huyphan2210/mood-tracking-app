@@ -5,7 +5,7 @@ import { MoodResponse } from "@/lib/api/data-contracts";
 import { moodRecords } from "@/lib/mood/records";
 
 import TrendsBarInfo from "../trends-bar-info/trends-bar-info";
-import styles from "./trends-bar.module.scss";
+import styles, { Styles } from "./trends-bar.module.scss";
 import infoStyles from "../trends-bar-info/trends-bar-info.module.scss";
 
 interface ITrendsBar {
@@ -93,7 +93,7 @@ const TrendsBar: FC<ITrendsBar> = ({ mood, index }) => {
         id={(mood.moodName ?? "") + index}
         className={`
           ${styles.trendsCard_Chart_Xaxis_Item_Bar}
-          ${mood.moodName ? styles[`bg-${moodRecords[mood.moodName].color}`] : ""}
+          ${mood.moodName ? styles[`bg-${moodRecords[mood.moodName].color}` as keyof Styles] : ""}
         `}
         popoverTarget={(mood.moodName ?? "") + index + "popover"}
         onMouseEnter={(e) => e.currentTarget.focus()}

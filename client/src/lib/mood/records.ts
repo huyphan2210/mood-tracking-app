@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MoodName, SleepHours } from "../api/data-contracts";
 
 import moodVeryHappyIcon from "@/icons/mood-very-happy.svg";
