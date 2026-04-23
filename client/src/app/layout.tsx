@@ -11,8 +11,11 @@ const redditSans = Reddit_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mood Tracking App",
-  description: "Mood Tracking App, created by Huy Phan",
+  title: "Mood Tracker",
+  description: "Mood Tracker, created by Huy Phan",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
