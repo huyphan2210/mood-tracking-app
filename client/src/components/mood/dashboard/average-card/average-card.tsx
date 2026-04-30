@@ -5,7 +5,6 @@ import AverageCardItem, {
 } from "./average-card-item/average-card-item";
 
 import sleepIconWhite from "@/icons/sleep-icon-white.svg";
-import reflectionIcon from "@/icons/reflection.svg";
 
 import increaseIcon from "@/icons/increase.svg";
 import increaseWhiteIcon from "@/icons/increase-white.svg";
@@ -73,20 +72,41 @@ const AverageCard: FC<IAverageCard> = ({ customClass }) => {
 
     if (current > previous) {
       return {
-        prefix: type === "mood" ? increaseIcon : increaseWhiteIcon,
+        prefix: (
+          <Image
+            src={type === "mood" ? increaseIcon : increaseWhiteIcon}
+            alt="Increase"
+            width={24}
+            height={24}
+          />
+        ),
         description: "Increase from the previous 5 check-ins",
       };
     }
 
     if (current < previous) {
       return {
-        prefix: type === "mood" ? decreaseIcon : decreaseWhiteIcon,
+        prefix: (
+          <Image
+            src={type === "mood" ? decreaseIcon : decreaseWhiteIcon}
+            alt="Decrease"
+            width={24}
+            height={24}
+          />
+        ),
         description: "Decrease from the previous 5 check-ins",
       };
     }
 
     return {
-      prefix: type === "mood" ? sameIcon : sameWhiteIcon,
+      prefix: (
+        <Image
+          src={type === "mood" ? sameIcon : sameWhiteIcon}
+          alt="Same"
+          width={24}
+          height={24}
+        />
+      ),
       description: "Same as the previous 5 check-ins",
     };
   };
