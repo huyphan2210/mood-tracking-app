@@ -21,6 +21,8 @@ const Home: FC = () => {
     return () => document.removeEventListener(userInfoChange, handleUserInfo);
   }, []);
 
+  const todayIso = new Date().toISOString();
+
   return (
     <>
       <section className={styles.homeGreetingSection}>
@@ -28,7 +30,7 @@ const Home: FC = () => {
           Hello, {userInfo?.fullName}!
         </span>
         <h1 className={styles.homeHeading}>How are you feeling today?</h1>
-        <time className={styles.homeTime} dateTime={new Date().toISOString()}>
+        <time className={styles.homeTime} dateTime={todayIso}>
           {formatToday()}
         </time>
       </section>

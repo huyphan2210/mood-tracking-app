@@ -71,7 +71,7 @@ export const getMoodTrendsOfMonth = async (date: Date) => {
   return trends;
 };
 
-const getMoodTrendsByTime = async (startDate: Date, endDate: Date) => {
+export const getMoodTrendsByTime = async (startDate: Date, endDate: Date) => {
   try {
     const result = await GETApi<MoodTrends>(
       `${API_URL}/get-trends-by-time?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,

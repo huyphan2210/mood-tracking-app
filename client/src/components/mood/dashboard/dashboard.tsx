@@ -103,7 +103,6 @@ const MoodDashboard: FC<IMoodDashboard> = ({}) => {
             ${styles.moodDashboard_Average} 
             ${todayMood !== undefined ? "" : styles.fullHeight}
           `}
-          moodTrends={moodTrends}
         />
         <TrendsCard
           customClass={`
