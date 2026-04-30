@@ -182,11 +182,7 @@ const AverageCard: FC<IAverageCard> = ({ customClass }) => {
     SixDaysAgo.setTime(today.getTime() - 5 * 24 * 60 * 60 * 1000);
     SixDaysAgo.setHours(0, 0, 0, 0);
     getMoodTrendsByTime(SixDaysAgo, today).then((trends) => {
-      trends.moodList = fillMissingDates(
-        trends.moodList.slice(0, 5),
-        SixDaysAgo,
-        today,
-      );
+      trends.moodList = fillMissingDates(trends.moodList, SixDaysAgo, today);
 
       setRecentMoods(trends);
     });
