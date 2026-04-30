@@ -28,28 +28,35 @@ const MoodDashboard: FC<IMoodDashboard> = ({}) => {
   const handleMoodModalClose = async (isMoodCreated?: boolean) => {
     if (isMoodCreated) {
       setTodayMood(null);
-      getMoodWithTimeout();
+      getTodayMood().then((mood) => {
+        setTodayMood(mood);
+        const isValid = mood?.advice && mood?.analysis;
+        if (isValid) {
+          setTrendsDate(new Date());
+          return;
+        }
+
+        getMoodWithTimeout();
+      });
     }
 
     setIsMoodModalOpen(false);
   };
 
   const getMoodWithTimeout = (timeout: number = 3000) => {
-    if (todayMood?.advice || todayMood?.analysis || getMoodTimes === 3) {
-      const today = new Date();
-      setTrendsDate(today);
-      getMoodTimes = 0;
-      return;
-    }
-
     setTimeout(() => {
       getTodayMood().then((mood) => {
-        if (!mood?.advice || !mood.analysis) {
-          getMoodTimes += 1;
-          getMoodWithTimeout();
+        const isValid = mood?.advice && mood?.analysis;
+
+        if (isValid || getMoodTimes === 2) {
+          setTodayMood(mood);
+          setTrendsDate(new Date());
+          getMoodTimes = 0;
+          return;
         }
 
-        setTodayMood(mood);
+        getMoodTimes += 1;
+        getMoodWithTimeout(timeout);
       });
     }, timeout);
   };
@@ -103,6 +110,7 @@ const MoodDashboard: FC<IMoodDashboard> = ({}) => {
             ${styles.moodDashboard_Average} 
             ${todayMood !== undefined ? "" : styles.fullHeight}
           `}
+          todayMood={todayMood}
         />
         <TrendsCard
           customClass={`
