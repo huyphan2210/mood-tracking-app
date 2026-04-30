@@ -1,54 +1,43 @@
-import { FC, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import styles from "./average-card.module.scss";
 import AverageCardItem, {
   IAverageCardItem,
 } from "./average-card-item/average-card-item";
 
 import sleepIconWhite from "@/icons/sleep-icon-white.svg";
-import sleepComparison from "@/icons/sleep-comparison.svg";
 import reflectionIcon from "@/icons/reflection.svg";
 
+import increaseIcon from "@/icons/increase.svg";
+import increaseWhiteIcon from "@/icons/increase-white.svg";
+import decreaseIcon from "@/icons/decrease.svg";
+import decreaseWhiteIcon from "@/icons/decrease-white.svg";
+import sameIcon from "@/icons/same.svg";
+import sameWhiteIcon from "@/icons/same-white.svg";
+
 import Image from "next/image";
-import { MoodTrends } from "@/lib/api/data-contracts";
+import { MoodResponse, MoodTrends } from "@/lib/api/data-contracts";
 import {
   moodOptions,
   moodRecords,
   sleepOptions,
   sleepRecords,
 } from "@/lib/mood/records";
-import { averageIfAllDefined } from "@/lib/mood/utility";
+import { averageIfAllDefined, fillMissingDates } from "@/lib/mood/utility";
+import { getMoodTrendsByTime } from "@/services/mood/MoodServices";
 
 interface IAverageCard {
   customClass?: string;
-  moodTrends?: MoodTrends | null;
 }
 
-const AverageCard: FC<IAverageCard> = ({ customClass, moodTrends }) => {
-  const averageItems = (moodTrends?: MoodTrends | null): IAverageCardItem[] => {
-    if (!moodTrends) {
-      return [
-        {
-          heading: "Average Mood",
-          subHeading: "(Last 5 check-ins)",
-          cardTitle: "Keep tracking!",
-          cardDescription: "Log 5 check-ins to see your average mood.",
-          type: "mood",
-        },
-        {
-          heading: "Average Sleep",
-          subHeading: "(Last 5 check-ins)",
-          cardTitle: "Not enough data yet!",
-          cardDescription: "Track 5 nights to view average sleep.",
-          type: "sleep",
-        },
-      ];
-    }
+const AverageCard: FC<IAverageCard> = ({ customClass }) => {
+  const missingHistoryMessage =
+    "You missed some check-ins in the previous 5, keep tracking to see the comparison!";
 
-    const firstFiveMood = moodTrends.moodList.slice(0, 5);
-    const avgMoodName = averageIfAllDefined(firstFiveMood, (m) =>
+  const computeAverages = (moods: MoodResponse[]) => {
+    const avgMoodName = averageIfAllDefined(moods, (m) =>
       m.moodName !== undefined ? moodRecords[m.moodName].numValue : undefined,
     );
-    const avgSleep = averageIfAllDefined(firstFiveMood, (m) =>
+    const avgSleep = averageIfAllDefined(moods, (m) =>
       m.sleepHours !== undefined
         ? sleepRecords[m.sleepHours].numValue
         : undefined,
@@ -59,17 +48,99 @@ const AverageCard: FC<IAverageCard> = ({ customClass, moodTrends }) => {
       (s) => s.numValue === avgSleep,
     )?.value;
 
+    return { avgMood, avgSleepHours };
+  };
+
+  const getDescriptionPrefix = (
+    type: "mood" | "sleep",
+    current?: number,
+    previous?: number,
+  ) => {
+    if (!current) {
+      return {
+        description:
+          type === "mood"
+            ? "Log 5 consecutive check-ins to see your average mood."
+            : "Track 5 consecutive nights to view average sleep.",
+      };
+    }
+
+    if (!previous) {
+      return {
+        description: missingHistoryMessage,
+      };
+    }
+
+    if (current > previous) {
+      return {
+        prefix: type === "mood" ? increaseIcon : increaseWhiteIcon,
+        description: "Increase from the previous 5 check-ins",
+      };
+    }
+
+    if (current < previous) {
+      return {
+        prefix: type === "mood" ? decreaseIcon : decreaseWhiteIcon,
+        description: "Decrease from the previous 5 check-ins",
+      };
+    }
+
+    return {
+      prefix: type === "mood" ? sameIcon : sameWhiteIcon,
+      description: "Same as the previous 5 check-ins",
+    };
+  };
+
+  const averageItems = (
+    recentMoods?: MoodTrends | null,
+  ): IAverageCardItem[] => {
+    if (!recentMoods) {
+      return [
+        {
+          heading: "Average Mood",
+          subHeading: "(Last 5 check-ins)",
+          cardTitle: "Keep tracking!",
+          cardDescription:
+            "Log 5 consecutive check-ins to see your average mood.",
+          type: "mood",
+        },
+        {
+          heading: "Average Sleep",
+          subHeading: "(Last 5 check-ins)",
+          cardTitle: "Not enough data yet!",
+          cardDescription: "Track 5 consecutive nights to view average sleep.",
+          type: "sleep",
+        },
+      ];
+    }
+
+    const firstFiveMood = recentMoods.moodList.slice(0, 5);
+    const lastFiveMood = recentMoods.moodList.slice(-5);
+    const { avgMood, avgSleepHours } = computeAverages(firstFiveMood);
+    const { avgMood: avgMoodLast, avgSleepHours: avgSleepLast } =
+      computeAverages(lastFiveMood);
+
+    const { prefix: avgMoodPrefix, description: avgMoodDescription } =
+      getDescriptionPrefix(
+        "mood",
+        avgMood ? moodRecords[avgMood].numValue : undefined,
+        avgMoodLast ? moodRecords[avgMoodLast].numValue : undefined,
+      );
+
+    const { prefix: avgSleepPrefix, description: avgSleepDescription } =
+      getDescriptionPrefix(
+        "sleep",
+        avgSleepHours ? sleepRecords[avgSleepHours].numValue : undefined,
+        avgSleepLast ? sleepRecords[avgSleepLast].numValue : undefined,
+      );
+
     return [
       {
         heading: "Average Mood",
         subHeading: "(Last 5 check-ins)",
         cardTitle: avgMood ? moodRecords[avgMood].label : "Keep tracking!",
-        cardDescription: avgMood
-          ? moodRecords[avgMood].label
-          : "Log 5 check-ins to see your average mood.",
-        cardDescriptionPrefix: avgMood && (
-          <Image src={reflectionIcon} alt="Reflection Icon" />
-        ),
+        cardDescription: avgMoodDescription,
+        cardDescriptionPrefix: avgMoodPrefix,
         cardColor: avgMood ? moodRecords[avgMood].color : undefined,
         cardTitlePrefix: avgMood && (
           <Image
@@ -87,12 +158,8 @@ const AverageCard: FC<IAverageCard> = ({ customClass, moodTrends }) => {
         cardTitle: avgSleepHours
           ? sleepRecords[avgSleepHours].label
           : "Not enough data yet!",
-        cardDescription: avgSleepHours
-          ? sleepRecords[avgSleepHours].label
-          : "Track 5 nights to view average sleep.",
-        cardDescriptionPrefix: avgSleepHours && (
-          <Image src={sleepComparison} alt="Sleep" />
-        ),
+        cardDescription: avgSleepDescription,
+        cardDescriptionPrefix: avgSleepPrefix,
         cardColor: avgSleepHours ? "blue" : undefined,
         cardTitlePrefix: avgSleepHours && (
           <Image src={sleepIconWhite} alt="Sleep" width={24} height={24} />
@@ -102,16 +169,35 @@ const AverageCard: FC<IAverageCard> = ({ customClass, moodTrends }) => {
     ];
   };
 
+  const [recentMoods, setRecentMoods] = useState<MoodTrends | null>();
+
   const [items, setItems] = useState<IAverageCardItem[]>(
-    averageItems(moodTrends),
+    averageItems(recentMoods),
   );
 
+  useEffect(() => {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    const SixDaysAgo = new Date(today);
+    SixDaysAgo.setTime(today.getTime() - 5 * 24 * 60 * 60 * 1000);
+    SixDaysAgo.setHours(0, 0, 0, 0);
+    getMoodTrendsByTime(SixDaysAgo, today).then((trends) => {
+      trends.moodList = fillMissingDates(
+        trends.moodList.slice(0, 5),
+        SixDaysAgo,
+        today,
+      );
+
+      setRecentMoods(trends);
+    });
+  }, []);
+
   useLayoutEffect(() => {
-    if (moodTrends) {
+    if (recentMoods) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setItems(averageItems(moodTrends));
+      setItems(averageItems(recentMoods));
     }
-  }, [moodTrends]);
+  }, [recentMoods]);
 
   return (
     <ul className={`${styles.averageCard} ${customClass || ""}`}>
