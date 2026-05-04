@@ -1,5 +1,5 @@
-export const formatToday = () => {
-  const date = new Date();
+export const formatToday = (propDate?: Date) => {
+  const date = propDate || new Date();
 
   const day = date.getDate();
 
