@@ -21,9 +21,17 @@ namespace server.Controllers
       if (secret != _config["CronSecret"])
         return Unauthorized();
 
-      var request = FakeMoodGenerator.Generate();
+      var guestUserId = Guid.Parse("019cd5ad-2246-765d-8d3b-27610e81c6ca");
+      var startDate = DateTime.UtcNow.Date;
+      var endDate = startDate.AddDays(1).AddTicks(-1);
 
-      await _moodServices.AnalyzeMoodAsync(request, Guid.Parse("019cd5ad-2246-765d-8d3b-27610e81c6ca"));
+      var todayMood = await _moodServices.GetSingleMoodAsync(startDate, endDate, guestUserId);
+
+      if (todayMood == null)
+      {
+        var request = FakeMoodGenerator.Generate();
+        await _moodServices.AnalyzeMoodAsync(request, guestUserId);
+      }
 
       return Ok();
     }
