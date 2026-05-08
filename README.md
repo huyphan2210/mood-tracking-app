@@ -105,19 +105,6 @@ npm run dev
 
 ---
 
-## Environment Variables
-
-Create a `.env` file and configure the required environment variables.
-
-Example:
-
-```env
-GEMINI_API_KEY=your_api_key
-DATABASE_CONNECTION_STRING=your_connection_string
-```
-
----
-
 ## 📷 Preview
 
 ![Preview](./Preview.jpg)
